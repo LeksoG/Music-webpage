@@ -374,12 +374,9 @@
         if (audioPlayer.paused) {
           audioPlayer.play();
           playPauseButton.textContent = "⏸";
-          albumContainer.classList.remove("hidden");
         } else {
           audioPlayer.pause();
           playPauseButton.textContent = "▶";
-          albumContainer.classList.add("hidden");
-          trackNameDisplay.textContent = "";
         }
       });
 
