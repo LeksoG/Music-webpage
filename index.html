@@ -261,6 +261,30 @@
       .lyrics-modal button:hover {
         background-color: #cc0000;
       }
+
+      /* Wavy Animation for Lyrics Modal */
+      @keyframes waveAnimation {
+        0% {
+          transform: scale(1) rotate(0deg);
+        }
+        25% {
+          transform: scale(1.05) rotate(1deg);
+        }
+        50% {
+          transform: scale(1.1) rotate(-1deg);
+        }
+        75% {
+          transform: scale(1.05) rotate(1deg);
+        }
+        100% {
+          transform: scale(1) rotate(0deg);
+        }
+      }
+
+      .lyrics-modal.wavy {
+        animation: waveAnimation 0.5s ease-in-out;
+      }
+
     </style>
   </head>
   <body>
@@ -401,12 +425,21 @@
         lyricsButtonsContainer.appendChild(lyricsButton);
         albumContainer.classList.add("active");
       }
-      function showLyrics(lyrics) {
-        const lyricsModal = document.createElement('div');
-        lyricsModal.classList.add('lyrics-modal');
-        lyricsModal.innerHTML = `<pre>${lyrics}</pre><button onclick="closeLyrics()">Close</button>`;
-        document.body.appendChild(lyricsModal);
-      }
+      
+    function showLyrics(lyrics) {
+  const lyricsModal = document.createElement('div');
+  lyricsModal.classList.add('lyrics-modal');
+  lyricsModal.innerHTML = `<pre>${lyrics}</pre><button onclick="closeLyrics()">Close</button>`;
+
+  // Add click event for the wavy animation
+  lyricsModal.addEventListener('click', () => {
+    lyricsModal.classList.add('wavy');
+    setTimeout(() => lyricsModal.classList.remove('wavy'), 500); // Remove the animation class after 0.5s
+  });
+
+  document.body.appendChild(lyricsModal);
+}
+
       function closeLyrics() {
         const modal = document.querySelector('.lyrics-modal');
         if (modal) {
