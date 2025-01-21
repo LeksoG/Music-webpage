@@ -261,31 +261,84 @@
       .lyrics-modal button:hover {
         background-color: #cc0000;
       }
-
-      /* Wavy Animation for Lyrics Modal */
-      @keyframes waveAnimation {
-        0% {
-          transform: scale(1) rotate(0deg);
-        }
-        25% {
-          transform: scale(1.05) rotate(1deg);
-        }
-        50% {
-          transform: scale(1.1) rotate(-1deg);
-        }
-        75% {
-          transform: scale(1.05) rotate(1deg);
-        }
-        100% {
-          transform: scale(1) rotate(0deg);
-        }
+    /* Share Button Styles */
+      .share-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        transition: transform 0.2s ease;
       }
 
-      .lyrics-modal.wavy {
-        animation: waveAnimation 0.5s ease-in-out;
-      }
+    .share-button:hover {
+       transform: scale(1.1);
+    }
 
-    </style>
+    /* Share Link Container */
+    .share-link-container {
+      position: fixed;
+      top: 20%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      z-index: 1000;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .share-link {
+      width: 300px;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: white;
+      color: black;
+    }
+
+    .copy-button {
+      background-color: #ff0000;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .copy-button:hover {
+      background-color: #cc0000;
+    }
+
+    .copy-success {
+      margin-top: 10px;
+      color: lime;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .copy-success.show {
+      opacity: 1;
+    }
+  </style>
   </head>
   <body>
     <!-- Search Bar -->
@@ -310,6 +363,7 @@
     <!-- Album Pop-Up -->
     <div class="album-container" id="albumContainer">
       <img src="" alt="Album Art" id="albumArt" class="album-image" />
+      <div class="share-button" id="shareButton">🔗</div>
     </div>
     <div class="track-name-container" id="trackNameContainer">
       <div id="lyricsButtonsContainer"></div>
@@ -327,8 +381,16 @@
     <audio id="audioPlayer" preload="auto">
       <source id="audioSource" src="tracks/track-1.mp3" type="audio/mp3" />
     </audio>
+    <div class="share-link-container hidden" id="shareLinkContainer">
+      <label for="shareLink">Share Link</label>
+      <input type="text" class="share-link" id="shareLink" readonly placeholder="The link will appear here" />
+      <!--<input type="text" class="share-link" id="shareLink" readonly />-->
+      <button class="copy-button" id="copyButton">Copy</button>
+      <div class="copy-success" id="copySuccess">Link copied!</div>
+    </div>
 
     <script>
+      let query = '';
       const playPauseButton = document.getElementById("playPauseButton");
       const prevButton = document.getElementById("prevButton");
       const nextButton = document.getElementById("nextButton");
@@ -338,6 +400,77 @@
       const audioSource = document.getElementById("audioSource");
       const trackNameDisplay = document.getElementById("trackName");
       const lyricsButtonsContainer = document.getElementById('lyricsButtonsContainer');
+      const shareButton = document.getElementById("shareButton");
+      const shareLinkContainer = document.getElementById("shareLinkContainer");
+      const shareLink = document.getElementById("shareLink");
+      const copyButton = document.getElementById("copyButton");
+      const copySuccess = document.getElementById("copySuccess");
+      const searchBar = document.getElementById("searchBar");
+      const searchContainer = document.querySelector(".search-container");
+      // Create a result container dynamically
+      const resultContainer = document.createElement("div");
+      resultContainer.style.display = "none";
+      resultContainer.style.marginTop = "20px";
+      resultContainer.style.padding = "20px";
+      resultContainer.style.background = "rgba(45, 49, 56, 0.9)";
+      resultContainer.style.borderRadius = "15px";
+      resultContainer.style.boxShadow = "0 4px 10px rgba(0, 0, 0, 0.4)";
+      searchContainer.appendChild(resultContainer);
+
+      searchBar.addEventListener("keypress", (event) => {
+        if (event.key === "Enter") {
+           query = searchBar.value.trim().toLowerCase();
+          if (!query) return;
+
+  // Show spinning loader
+      const spinner = document.createElement("div");
+      spinner.style.border = "4px solid rgba(255, 255, 255, 0.2)";
+      spinner.style.borderTop = "4px solid #ffffff";
+      spinner.style.borderRadius = "50%";
+      spinner.style.width = "30px";
+      spinner.style.height = "30px";
+      spinner.style.animation = "spin 1s linear infinite";
+      spinner.style.margin = "0 auto";
+      resultContainer.innerHTML = "";
+      resultContainer.appendChild(spinner);
+      resultContainer.style.display = "block";
+
+      // Simulate a delay for 1 second
+      setTimeout(() => {
+        const track = playlist.find((t) => t.trackName.toLowerCase() === query);
+
+        if (track) {
+          // Display the track info
+          resultContainer.innerHTML = `
+           <img src="${track.albumArt}" style="width: 100px; height: 100px; border-radius: 10px; margin-bottom: 10px;" />
+           <div style="font-size: 18px; font-weight: bold;">${track.trackName}</div>
+          <a href="#" id="playTrackLink" style="color: #ff0000; text-decoration: none;">Play</a>
+          `;
+          // Add event listener to the "Play" link
+          document.getElementById("playTrackLink").addEventListener("click", () => {
+          // Update the track and play the music
+          const trackIndex = playlist.indexOf(track);
+          updateTrack(trackIndex);
+          audioPlayer.play();
+          playPauseButton.textContent = "⏸"; // Update play/pause button text
+          });
+        } else {
+          // Display "not found" message
+          resultContainer.innerHTML = `<div style="color: #ff0000;">Music not found.</div>`;
+        }
+      }, 1000);
+    }
+  });
+
+  // Add spinner animation
+  const style = document.createElement("style");
+  style.textContent = `
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  `;
+  document.head.appendChild(style);
 
       const playlist = [
         {
@@ -425,20 +558,25 @@
         lyricsButtonsContainer.appendChild(lyricsButton);
         albumContainer.classList.add("active");
       }
-      
-    function showLyrics(lyrics) {
+
+   function showLyrics(lyrics) {
+  // Create the lyrics modal
   const lyricsModal = document.createElement('div');
   lyricsModal.classList.add('lyrics-modal');
   lyricsModal.innerHTML = `<pre>${lyrics}</pre><button onclick="closeLyrics()">Close</button>`;
 
-  // Add click event for the wavy animation
-  lyricsModal.addEventListener('click', () => {
-    lyricsModal.classList.add('wavy');
-    setTimeout(() => lyricsModal.classList.remove('wavy'), 500); // Remove the animation class after 0.5s
-  });
-
+  // Add the modal to the document body
   document.body.appendChild(lyricsModal);
+
+  // Add the animation class for the wavy effect
+  lyricsModal.classList.add('animate');
+
+  // Remove the animation class after the animation ends
+  lyricsModal.addEventListener('animationend', () => {
+    lyricsModal.classList.remove('animate');
+  });
 }
+
 
       function closeLyrics() {
         const modal = document.querySelector('.lyrics-modal');
@@ -468,44 +606,80 @@
         showAlbumOnLoad();
       };
 
-      nextButton.addEventListener("click", () => {
-        // Add slide-out animation to the current album
-        albumContainer.classList.remove("slide-in-left", "slide-in-right");
+     nextButton.addEventListener("click", () => {
+      // Add slide-out animation to the current album
         albumContainer.classList.add("slide-out-left");
 
         setTimeout(() => {
-          // Change to the next track after the slide-out animation
+           // Change to the next track after the slide-out animation
           currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
           updateTrack(currentTrackIndex);
-
-          // Add slide-in animation for the next album
+          const track = playlist.find((t) => t.trackName.toLowerCase() === query);
+          // Add the slide-in animation for the new track
           albumContainer.classList.remove("slide-out-left");
           albumContainer.classList.add("slide-in-right");
-        }, 500); // Match the animation duration
-      });
+          albumArt.src = playlist[currentTrackIndex].albumArt;
+          // Automatically play the track
+          audioPlayer.play();
+          playPauseButton.textContent = "⏸";
+     }, 500); // Match the animation duration
+   });
 
       prevButton.addEventListener("click", () => {
         // Add slide-out animation to the current album
         albumContainer.classList.remove("slide-in-left", "slide-in-right");
         albumContainer.classList.add("slide-out-right");
 
-        setTimeout(() => {
-          // Change to the previous track after the slide-out animation
-          currentTrackIndex =
-            (currentTrackIndex - 1 + playlist.length) % playlist.length;
-          updateTrack(currentTrackIndex);
+  setTimeout(() => {
+    // Change to the previous track after the slide-out animation
+    currentTrackIndex =
+      (currentTrackIndex - 1 + playlist.length) % playlist.length;
+    updateTrack(currentTrackIndex);
 
-          // Add slide-in animation for the previous album
-          albumContainer.classList.remove("slide-out-right");
-          albumContainer.classList.add("slide-in-left");
-        }, 500); // Match the animation duration
-      });
+    // Automatically play the track
+    audioPlayer.play();
+    playPauseButton.textContent = "⏸";
+
+    // Add slide-in animation for the previous album
+    albumContainer.classList.remove("slide-out-right");
+    albumContainer.classList.add("slide-in-left");
+  }, 500); // Match the animation duration
+});
 
       // Show album and track on page load
       window.onload = () => {
         updateTrack(currentTrackIndex);
         showAlbumOnLoad();
       };
-    </script>
+
+    shareButton.addEventListener("click", () => {
+      const trackName = playlist[currentTrackIndex].trackName.replace(/\s+/g, "-").toLowerCase();
+      const link = `https://rythym.com/share/${trackName}`;
+      shareLink.value = link;
+      // Show the share link container
+      shareLinkContainer.classList.remove("hidden");
+    });
+    copyButton.addEventListener("click", () => {
+      // Copy the link to clipboard
+      shareLink.select();
+      shareLink.setSelectionRange(0, 99999); // For mobile devices
+      document.execCommand("copy");
+
+      // Show success message
+      copySuccess.classList.add("show");
+
+      // Hide the success message after 2 seconds
+      setTimeout(() => {
+        copySuccess.classList.remove("show");
+      }, 2000);
+    });
+
+    // Optional: Close the share link container when clicking outside
+    window.addEventListener("click", (e) => {
+      if (!shareLinkContainer.contains(e.target) && e.target !== shareButton) {
+        shareLinkContainer.classList.add("hidden");
+      }
+    });
+  </script>
   </body>
 </html>
