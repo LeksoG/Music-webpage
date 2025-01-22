@@ -237,9 +237,9 @@
         animation: slideOutToRight 0.5s ease forwards;
       }
       .lyrics-modal {
-         position: fixed;
-         top: 20px;
-         left: 50%;
+        position: fixed;
+        top: 20px;
+        left: 50%;
         transform: translateX(-50%);
         background-color: rgba(0, 0, 0, 0.9);
         color: white;
@@ -249,8 +249,8 @@
         max-height: 70%;
         overflow-y: auto;
         z-index: 1000;
-     }
-     .lyrics-modal button {
+      }
+      .lyrics-modal button {
         background-color: #ff0000;
         color: white;
         padding: 10px;
@@ -262,7 +262,7 @@
       .lyrics-modal button:hover {
         background-color: #cc0000;
       }
-    /* Share Button Styles */
+      /* Share Button Styles */
       .share-button {
         position: absolute;
         top: 10px;
@@ -280,66 +280,66 @@
         transition: transform 0.2s ease;
       }
 
-    .share-button:hover {
-       transform: scale(1.1);
-    }
+      .share-button:hover {
+        transform: scale(1.1);
+      }
 
-    /* Share Link Container */
-    .share-link-container {
-      position: fixed;
-      top: 20%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: rgba(0, 0, 0, 0.9);
-      color: white;
-      padding: 20px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      z-index: 1000;
-    }
+      /* Share Link Container */
+      .share-link-container {
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.9);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        z-index: 1000;
+      }
 
-    .hidden {
-      display: none;
-    }
+      .hidden {
+        display: none;
+      }
 
-    .share-link {
-      width: 300px;
-      padding: 10px;
-      font-size: 16px;
-      border: none;
-      border-radius: 5px;
-      background-color: white;
-      color: black;
-    }
+      .share-link {
+        width: 300px;
+        padding: 10px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        background-color: white;
+        color: black;
+      }
 
-    .copy-button {
-      background-color: #ff0000;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+      .copy-button {
+        background-color: #ff0000;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
 
-    .copy-button:hover {
-      background-color: #cc0000;
-    }
+      .copy-button:hover {
+        background-color: #cc0000;
+      }
 
-    .copy-success {
-      margin-top: 10px;
-      color: lime;
-      font-size: 14px;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
+      .copy-success {
+        margin-top: 10px;
+        color: lime;
+        font-size: 14px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
 
-    .copy-success.show {
-      opacity: 1;
-    }
-  </style>
+      .copy-success.show {
+        opacity: 1;
+      }
+    </style>
   </head>
   <body>
     <!-- Search Bar -->
@@ -384,7 +384,13 @@
     </audio>
     <div class="share-link-container hidden" id="shareLinkContainer">
       <label for="shareLink">Share Link</label>
-      <input type="text" class="share-link" id="shareLink" readonly placeholder="The link will appear here" />
+      <input
+        type="text"
+        class="share-link"
+        id="shareLink"
+        readonly
+        placeholder="The link will appear here"
+      />
       <!--<input type="text" class="share-link" id="shareLink" readonly />-->
       <button class="copy-button" id="copyButton">Copy</button>
       <div class="copy-success" id="copySuccess">Link copied!</div>
@@ -394,7 +400,9 @@
       // Create a dropdown for suggestions
       const suggestionDropdown = document.createElement("div");
       suggestionDropdown.style.position = "absolute";
-      suggestionDropdown.style.top = `${searchBar.offsetTop + searchBar.offsetHeight}px`;
+      suggestionDropdown.style.top = `${
+        searchBar.offsetTop + searchBar.offsetHeight
+      }px`;
       suggestionDropdown.style.left = `${searchBar.offsetLeft}px`;
       suggestionDropdown.style.width = `${searchBar.offsetWidth}px`;
       suggestionDropdown.style.backgroundColor = "#fff";
@@ -409,77 +417,82 @@
       suggestionDropdown.style.opacity = "0"; // Start as invisible
       document.body.appendChild(suggestionDropdown);
 
-       // Event listener for typing in the search bar (for suggestions)
-  searchBar.addEventListener("input", (event) => {
-    const query = searchBar.value.trim().toLowerCase();
-    suggestionDropdown.innerHTML = ""; // Clear previous suggestions
+      // Event listener for typing in the search bar (for suggestions)
+      searchBar.addEventListener("input", (event) => {
+        const query = searchBar.value.trim().toLowerCase();
+        suggestionDropdown.innerHTML = ""; // Clear previous suggestions
 
-     if (!query) {
-      suggestionDropdown.style.display = "none"; // Hide dropdown if input is empty
-      return;
-    }
+        if (!query) {
+          suggestionDropdown.style.display = "none"; // Hide dropdown if input is empty
+          return;
+        }
 
-    // Filter songs that match the query
-    const matchingTracks = playlist.filter((track) =>
-      track.trackName.toLowerCase().includes(query)
-    );
+        // Filter songs that match the query
+        const matchingTracks = playlist.filter((track) =>
+          track.trackName.toLowerCase().includes(query)
+        );
 
-    if (matchingTracks.length > 0) {
-      suggestionDropdown.style.display = "block";
-      suggestionDropdown.style.opacity = "1"; // Fade in the dropdown
+        if (matchingTracks.length > 0) {
+          suggestionDropdown.style.display = "block";
+          suggestionDropdown.style.opacity = "1"; // Fade in the dropdown
 
-      // Display matching tracks as suggestions
-      matchingTracks.forEach((track) => {
-        const suggestionItem = document.createElement("div");
-        suggestionItem.style.padding = "10px";
-        suggestionItem.style.cursor = "pointer";
-        suggestionItem.style.borderBottom = "1px solid #eee";
-        suggestionItem.style.fontSize = "14px";
-        suggestionItem.style.color = "#333";
-        suggestionItem.style.transition = "background-color 0.3s ease"; // Smooth background color transition
-        suggestionItem.textContent = track.trackName;
+          // Display matching tracks as suggestions
+          matchingTracks.forEach((track) => {
+            const suggestionItem = document.createElement("div");
+            suggestionItem.style.padding = "10px";
+            suggestionItem.style.cursor = "pointer";
+            suggestionItem.style.borderBottom = "1px solid #eee";
+            suggestionItem.style.fontSize = "14px";
+            suggestionItem.style.color = "#333";
+            suggestionItem.style.transition = "background-color 0.3s ease"; // Smooth background color transition
+            suggestionItem.textContent = track.trackName;
 
-        // Highlight the suggestion on hover
-        suggestionItem.addEventListener("mouseenter", () => {
-          suggestionItem.style.backgroundColor = "#f5f5f5"; // Light hover effect
-        });
-        suggestionItem.addEventListener("mouseleave", () => {
-          suggestionItem.style.backgroundColor = "#fff"; // Revert to default background
-        });
+            // Highlight the suggestion on hover
+            suggestionItem.addEventListener("mouseenter", () => {
+              suggestionItem.style.backgroundColor = "#f5f5f5"; // Light hover effect
+            });
+            suggestionItem.addEventListener("mouseleave", () => {
+              suggestionItem.style.backgroundColor = "#fff"; // Revert to default background
+            });
 
-        // Click event to play the selected song
-        suggestionItem.addEventListener("click", () => {
-          const trackIndex = playlist.indexOf(track);
-          updateTrack(trackIndex);
-          audioPlayer.play();
-          playPauseButton.textContent = "⏸"; // Update play/pause button text
+            // Click event to play the selected song
+            suggestionItem.addEventListener("click", () => {
+              const trackIndex = playlist.indexOf(track);
+              updateTrack(trackIndex);
+              audioPlayer.play();
+              playPauseButton.textContent = "⏸"; // Update play/pause button text
 
-          // Clear and hide the dropdown
-          suggestionDropdown.style.display = "0";
-          setTimeout(() => suggestionDropdown.style.display = "none", 300); // Hide after fade
-          searchBar.value = track.trackName; // Set the search bar to the selected song
-        });
+              // Clear and hide the dropdown
+              suggestionDropdown.style.display = "0";
+              setTimeout(
+                () => (suggestionDropdown.style.display = "none"),
+                300
+              ); // Hide after fade
+              searchBar.value = track.trackName; // Set the search bar to the selected song
+            });
 
-
-        suggestionDropdown.appendChild(suggestionItem);
+            suggestionDropdown.appendChild(suggestionItem);
+          });
+        } else {
+          suggestionDropdown.style.display = "0"; // Hide dropdown if no matches
+          setTimeout(() => (suggestionDropdown.style.display = "none"), 300); // Hide after fade
+        }
       });
-    } else {
-      suggestionDropdown.style.display = "0"; // Hide dropdown if no matches
-      setTimeout(() => suggestionDropdown.style.display = "none", 300); // Hide after fade
-    }
-  });
 
-  // Hide suggestions dropdown when clicking outside
-  document.addEventListener("click", (event) => {
-    if (!suggestionDropdown.contains(event.target) && event.target !== searchBar) {
-      suggestionDropdown.style.display = "0";
-      setTimeout(() => suggestionDropdown.style.display = "none", 300); // Hide after fade
-    }
-  });
-</script>
+      // Hide suggestions dropdown when clicking outside
+      document.addEventListener("click", (event) => {
+        if (
+          !suggestionDropdown.contains(event.target) &&
+          event.target !== searchBar
+        ) {
+          suggestionDropdown.style.display = "0";
+          setTimeout(() => (suggestionDropdown.style.display = "none"), 300); // Hide after fade
+        }
+      });
+    </script>
 
-<script>
-      let query = '';
+    <script>
+      let query = "";
       const playPauseButton = document.getElementById("playPauseButton");
       const prevButton = document.getElementById("prevButton");
       const nextButton = document.getElementById("nextButton");
@@ -488,7 +501,9 @@
       const audioPlayer = document.getElementById("audioPlayer");
       const audioSource = document.getElementById("audioSource");
       const trackNameDisplay = document.getElementById("trackName");
-      const lyricsButtonsContainer = document.getElementById('lyricsButtonsContainer');
+      const lyricsButtonsContainer = document.getElementById(
+        "lyricsButtonsContainer"
+      );
       const shareButton = document.getElementById("shareButton");
       const shareLinkContainer = document.getElementById("shareLinkContainer");
       const shareLink = document.getElementById("shareLink");
@@ -510,92 +525,227 @@
     <script>
       const style = document.createElement("style");
       style.textContent = `
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
 
-      .fade-out {
-        animation: fadeOut 0.5s forwards;
-      }
+            .fade-out {
+              animation: fadeOut 0.5s forwards;
+            }
 
-      @keyframes fadeOut {
-        from { opacity: 1; }
-        to { opacity: 0; }
-      }
-    `;
-  document.head.appendChild(style);
+            @keyframes fadeOut {
+              from { opacity: 1; }
+              to { opacity: 0; }
+            }
+          `;
+      document.head.appendChild(style);
       searchBar.addEventListener("keypress", (event) => {
         if (event.key === "Enter") {
-           query = searchBar.value.trim().toLowerCase();
+          query = searchBar.value.trim().toLowerCase();
           if (!query) return;
 
-  // Show spinning loader
-      const spinner = document.createElement("div");
-      spinner.style.border = "4px solid rgba(255, 255, 255, 0.2)";
-      spinner.style.borderTop = "4px solid #ffffff";
-      spinner.style.borderRadius = "50%";
-      spinner.style.width = "30px";
-      spinner.style.height = "30px";
-      spinner.style.animation = "spin 1s linear infinite";
-      spinner.style.margin = "0 auto";
-      resultContainer.innerHTML = "";
-      resultContainer.appendChild(spinner);
-      resultContainer.style.display = "block";
+          // Show spinning loader
+          const spinner = document.createElement("div");
+          spinner.style.border = "4px solid rgba(255, 255, 255, 0.2)";
+          spinner.style.borderTop = "4px solid #ffffff";
+          spinner.style.borderRadius = "50%";
+          spinner.style.width = "30px";
+          spinner.style.height = "30px";
+          spinner.style.animation = "spin 1s linear infinite";
+          spinner.style.margin = "0 auto";
+          resultContainer.innerHTML = "";
+          resultContainer.appendChild(spinner);
+          resultContainer.style.display = "block";
 
-      // Simulate a delay for 1 second
-      setTimeout(() => {
-        const track = playlist.find((t) => t.trackName.toLowerCase() === query);
+          // Simulate a delay for 1 second
+          setTimeout(() => {
+            const track = playlist.find(
+              (t) => t.trackName.toLowerCase() === query
+            );
 
-        if (track) {
-          // Display the track info
-          resultContainer.innerHTML = `
-           <img src="${track.albumArt}" style="width: 100px; height: 100px; border-radius: 10px; margin-bottom: 10px;" />
-           <div style="font-size: 18px; font-weight: bold;">${track.trackName}</div>
-           <a href="#" id="playTrackLink" style="color: #ff0000; text-decoration: none;">Play</a>
-          `;
-          // Add event listener to the "Play" link
-          document.getElementById("playTrackLink").addEventListener("click", () => {
-          // Update the track and play the music
-          const trackIndex = playlist.indexOf(track);
-          updateTrack(trackIndex);
-          audioPlayer.play();
-          playPauseButton.textContent = "⏸"; // Update play/pause button text
-          });
-        } else {
-          // Display "not found" message
-          resultContainer.innerHTML = `<div style="color: #ff0000;">Music not found.</div>`;
+            if (track) {
+              // Display the track info
+              resultContainer.innerHTML = `
+                 <img src="${track.albumArt}" style="width: 100px; height: 100px; border-radius: 10px; margin-bottom: 10px;" />
+                 <div style="font-size: 18px; font-weight: bold;">${track.trackName}</div>
+                 <a href="#" id="playTrackLink" style="color: #ff0000; text-decoration: none;">Play</a>
+                `;
+              // Add event listener to the "Play" link
+              document
+                .getElementById("playTrackLink")
+                .addEventListener("click", () => {
+                  // Update the track and play the music
+                  const trackIndex = playlist.indexOf(track);
+                  updateTrack(trackIndex);
+                  audioPlayer.play();
+                  playPauseButton.textContent = "⏸"; // Update play/pause button text
+                });
+            } else {
+              // Display "not found" message
+              resultContainer.innerHTML = `<div style="color: #ff0000;">Music not found.</div>`;
+            }
+          }, 1000);
+
+          // Add click listener to dismiss the results
+          document.addEventListener("click", handleClickOutside);
         }
-      }, 1000);
-       
-        // Add click listener to dismiss the results
-      document.addEventListener("click", handleClickOutside);
-    }
-  });
+      });
 
-   // Function to handle clicks outside the result container
-  function handleClickOutside(event) {
-    if (!resultContainer.contains(event.target) && event.target !== searchBar) {
-      resultContainer.classList.add("fade-out"); // Add fade-out class
-      setTimeout(() => {
-        resultContainer.style.display = "none"; // Hide after animation
-        resultContainer.classList.remove("fade-out"); // Remove class for future use
-      }, 500); // Match animation duration
-      document.removeEventListener("click", handleClickOutside);
-    }
-  }    
+      // Function to handle clicks outside the result container
+      function handleClickOutside(event) {
+        if (
+          !resultContainer.contains(event.target) &&
+          event.target !== searchBar
+        ) {
+          resultContainer.classList.add("fade-out"); // Add fade-out class
+          setTimeout(() => {
+            resultContainer.style.display = "none"; // Hide after animation
+            resultContainer.classList.remove("fade-out"); // Remove class for future use
+          }, 500); // Match animation duration
+          document.removeEventListener("click", handleClickOutside);
+        }
+      }
 
       const playlist = [
         {
           src: "tracks/track-1.mp3",
           albumArt: "images/album1.jpg",
           trackName: "Californication",
-          lyrics: "Psychic spies from China try to steal your mind's elation\nAnd little girls from Sweden dream of silver screen quotation\nAnd if you want these kind of dreams it's Californication\nIt's the edge of the world and all of Western civilization\nThe sun may rise in the East, at least it settled in a final location\nIt's understood that Hollywood sells Californication\nPay your surgeon very well to break the spell of aging\nCelebrity skin, is this your chin, or is that war you're waging?\nFirst born unicorn\nHardcore soft porn\nDream of Californication\nDream of Californication\nDream of Californication\nDream of Californication\nMarry me, girl, be my fairy to the world, be my very own constellation\nA teenage bride with a baby inside getting high on information\nAnd buy me a star on the boulevard, it's Californication\nSpace may be the final frontier, but it's made in a Hollywood basement\nAnd Cobain, can you hear the spheres singing songs off Station To Station?\nAnd Alderaan's not far away, it's Californication\nBorn and raised by those who praise control of population\nWell, everybody's been there and I don't mean on vacation\nFirst born unicorn\nHardcore soft porn\nDream of Californication\nDream of Californication\nDream of Californication\nDream of Californication\nDestruction leads to a very rough road, but it also breeds creation\nAnd earthquakes are to a girl's guitar, they're just another good vibration\nAnd tidal waves couldn't save the world from Californication\nPay your surgeon very well to break the spell of aging\nSicker than the rest, there is no test, but this is what you're craving\nFirst born unicorn\nHardcore soft porn\nDream of Californication\nDream of Californication\nDream of Californication\nDream of Californication"
+          lyrics: `Psychic spies from China try to steal your mind's elation
+And little girls from Sweden dream of silver screen quotation
+And if you want these kind of dreams it's Californication
+It's the edge of the world and all of Western civilization
+The sun may rise in the East, at least it settled in a final location
+It's understood that Hollywood sells Californication
+Pay your surgeon very well to break the spell of aging
+Celebrity skin, is this your chin, or is that war you're waging?
+First born unicorn
+Hardcore soft porn
+Dream of Californication
+Dream of Californication
+Dream of Californication
+Dream of Californication
+Marry me, girl, be my fairy to the world, be my very own constellation
+A teenage bride with a baby inside getting high on information
+And buy me a star on the boulevard, it's Californication
+Space may be the final frontier, but it's made in a Hollywood basement
+And Cobain, can you hear the spheres singing songs off Station To Station?
+And Alderaan's not far away, it's Californication
+Born and raised by those who praise control of population
+Well, everybody's been there and I don't mean on vacation
+First born unicorn
+Hardcore soft porn
+Dream of Californication
+Dream of Californication
+Dream of Californication
+Dream of Californication
+Destruction leads to a very rough road, but it also breeds creation
+And earthquakes are to a girl's guitar, they're just another good vibration
+And tidal waves couldn't save the world from Californication
+Pay your surgeon very well to break the spell of aging
+Sicker than the rest, there is no test, but this is what you're craving
+First born unicorn
+Hardcore soft porn
+Dream of Californication
+Dream of Californication
+Dream of Californication
+Dream of Californication`,
         },
         {
           src: "tracks/track-2.mp3",
           albumArt: "images/album2.jpg",
           trackName: "Lose Yourself",
+          lyrics: `[Intro]
+Look... If you had... one shot... or one opportunity...
+To seize everything you ever wanted... one moment...
+Would you capture it? Or just let it slip?
+Yo
+
+[Verse 1]
+His palms are sweaty, knees weak, arms are heavy
+There's vomit on his sweater already, mom's spaghetti
+He's nervous, but on the surface he looks calm and ready
+to drops bombs, but he keeps on forgetting
+what he wrote down, the whole crowd goes so loud
+He opens his mouth but the words won't come out
+He's chokin, how? Everybody's jokin now
+The clock's run out, time's up, over - BLAOW!
+Snap back to reality, OHH! there goes gravity
+OHH! there goes Rabbit, he choked
+He's so mad, but he won't
+Give up that easy nope, he won't have it
+He knows, his whole back's to these ropes
+It don't matter, he's dope
+He knows that, but he's broke
+He's so sad that he knows
+when he goes back to this mobile home, that's when it's
+back to the lab again, yo, this whole rap shift
+He better go capture this moment and hope it don't pass him
+
+[Chorus]
+You better - lose yourself in the music, the moment
+You own it, you better never let it go (go)
+You only get one shot, do not miss your chance to blow
+This opportunity comes once in a lifetime
+You better - lose yourself in the music, the moment
+You own it, you better never let it go (go)
+You only get one shot, do not miss your chance to blow
+This opportunity comes once in a lifetime
+You better..
+
+[Verse 2]
+Soul's escaping, through this hole that is gaping
+This world is mine for the taking
+Make me king, as we move toward a, new world order
+A normal life is boring; but superstardom's
+close to post-mortem, it only grows harder
+Homie grows hotter, he blows it's all over
+These hoes is all on him, coast to coast shows
+He's known as the Globetrotter
+Lonely roads, God only knows
+He's grown farther from home, he's no father
+He goes home and barely knows his own daughter
+But hold your nose cause here goes the cold water
+These hoes don't want him no mo', he's cold product
+They moved on to the next schmoe who flows
+He nose-dove and sold nada, and so the soap opera
+is told, it unfolds, I suppose it's old partner
+But the beat goes on da-da-dum da-dum da-dah
+
+[Chorus]
+
+[Verse 3]
+No more games, Imma change what you call rage
+Tear this motherfuckin roof off like two dogs caged
+I was playin in the beginning, the mood all changed
+I've been chewed up and spit out and booed off stage
+But I kept rhymin and stepped right in the next cypher
+Best believe somebody's payin the pied piper
+All the pain inside amplified by the
+fact that I can't get by with my nine to
+five and I can't provide the right type of
+life for my family, cause man, these God damn
+food stamps don't buy diapers, and there's no movie
+There's no Mekhi Phifer, this is my life
+And these times are so hard, and it's gettin even harder
+Tryin to feed and water my seed plus, teeter-totter
+Caught up between bein a father and a pre-madonna
+Baby momma drama screamin on her too much for me to wanna
+stay in one spot, another day of monotony
+has gotten me to the point, I'm like a snail I've got
+to formulate a plot, or end up in jail or shot
+Success is my only motherfuckin option, failure's not
+Mom I love you but this trailer's got to go
+I cannot grow old in Salem's Lot
+So here I go it's my shot, feet fail me not
+This may be the only opportunity that I got
+
+[Chorus]
+
+[Outro]
+You can do anything you set your mind to, man.
+`,
         },
         {
           src: "tracks/track-3.mp3",
@@ -650,57 +800,57 @@
         {
           src: "tracks/track-13.mp3",
           albumArt: "images/album13.jpg",
-          trackName:"Shape of my Heart",
+          trackName: "Shape of my Heart",
         },
         {
           src: "tracks/track-14.mp3",
           albumArt: "images/album14.png",
-          trackName:"Blinding lights",
+          trackName: "Blinding lights",
         },
         {
           src: "tracks/track-15.mp3",
           albumArt: "images/album15.jpg",
-          trackName:"Diamonds",
+          trackName: "Diamonds",
         },
         {
           src: "tracks/track-16.mp3",
           albumArt: "images/album16.jpg",
-          trackName:"Counting stars",
+          trackName: "Counting stars",
         },
         {
           src: "tracks/track-17.mp3",
           albumArt: "images/album17.jpg",
-          trackName:"Wonderwall",
+          trackName: "Wonderwall",
         },
         {
           src: "tracks/track-18.mp3",
           albumArt: "images/album18.jpg",
-          trackName:"Don't look back in anger",
+          trackName: "Don't look back in anger",
         },
         {
           src: "tracks/track-19.mp3",
           albumArt: "images/album19.jpg",
-          trackName:"One more light",
+          trackName: "One more light",
         },
         {
           src: "tracks/track-20.mp3",
           albumArt: "images/album20.jpg",
-          trackName:"Love me again",
+          trackName: "Love me again",
         },
         {
           src: "tracks/track-21.mp3",
           albumArt: "images/album21.jpg",
-          trackName:"Shape of you",
+          trackName: "Shape of you",
         },
         {
           src: "tracks/track-22.mp3",
           albumArt: "images/album22.jpg",
-          trackName:"Let me down slowly",
+          trackName: "Let me down slowly",
         },
         {
           src: "tracks/track-23.mp3",
           albumArt: "images/album23.jpg",
-          trackName:"Mood",
+          trackName: "Mood",
         },
       ];
 
@@ -711,43 +861,43 @@
         albumArt.src = playlist[index].albumArt;
         audioPlayer.load();
         trackNameDisplay.textContent = playlist[index].trackName;
-        
-        const lyricsButton = document.createElement('button');
-        lyricsButton.textContent = "Lyrics";
-        lyricsButton.classList.add('lyrics-button');
-        lyricsButton.addEventListener('click', () => showLyrics(playlist[index].lyrics));
 
-        lyricsButtonsContainer.innerHTML = '';
+        const lyricsButton = document.createElement("button");
+        lyricsButton.textContent = "Lyrics";
+        lyricsButton.classList.add("lyrics-button");
+        lyricsButton.addEventListener("click", () =>
+          showLyrics(playlist[index].lyrics)
+        );
+
+        lyricsButtonsContainer.innerHTML = "";
         lyricsButtonsContainer.appendChild(lyricsButton);
         albumContainer.classList.add("active");
       }
 
-   function showLyrics(lyrics) {
-  // Create the lyrics modal
-  const lyricsModal = document.createElement('div');
-  lyricsModal.classList.add('lyrics-modal');
-  lyricsModal.innerHTML = `<pre>${lyrics}</pre><button onclick="closeLyrics()">Close</button>`;
+      function showLyrics(lyrics) {
+        // Create the lyrics modal
+        const lyricsModal = document.createElement("div");
+        lyricsModal.classList.add("lyrics-modal");
+        lyricsModal.innerHTML = `<pre>${lyrics}</pre><button onclick="closeLyrics()">Close</button>`;
 
-  // Add the modal to the document body
-  document.body.appendChild(lyricsModal);
+        // Add the modal to the document body
+        document.body.appendChild(lyricsModal);
 
-  // Add the animation class for the wavy effect
-  lyricsModal.classList.add('animate');
+        // Add the animation class for the wavy effect
+        lyricsModal.classList.add("animate");
 
-  // Remove the animation class after the animation ends
-  lyricsModal.addEventListener('animationend', () => {
-    lyricsModal.classList.remove('animate');
-  });
-}
-
+        // Remove the animation class after the animation ends
+        lyricsModal.addEventListener("animationend", () => {
+          lyricsModal.classList.remove("animate");
+        });
+      }
 
       function closeLyrics() {
-        const modal = document.querySelector('.lyrics-modal');
+        const modal = document.querySelector(".lyrics-modal");
         if (modal) {
           modal.remove();
         }
       }
-
 
       function showAlbumOnLoad() {
         albumContainer.classList.add("active");
@@ -769,15 +919,17 @@
         showAlbumOnLoad();
       };
 
-     nextButton.addEventListener("click", () => {
-      // Add slide-out animation to the current album
+      nextButton.addEventListener("click", () => {
+        // Add slide-out animation to the current album
         albumContainer.classList.add("slide-out-left");
 
         setTimeout(() => {
-           // Change to the next track after the slide-out animation
+          // Change to the next track after the slide-out animation
           currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
           updateTrack(currentTrackIndex);
-          const track = playlist.find((t) => t.trackName.toLowerCase() === query);
+          const track = playlist.find(
+            (t) => t.trackName.toLowerCase() === query
+          );
           // Add the slide-in animation for the new track
           albumContainer.classList.remove("slide-out-left");
           albumContainer.classList.add("slide-in-right");
@@ -785,29 +937,29 @@
           // Automatically play the track
           audioPlayer.play();
           playPauseButton.textContent = "⏸";
-     }, 500); // Match the animation duration
-   });
+        }, 500); // Match the animation duration
+      });
 
       prevButton.addEventListener("click", () => {
         // Add slide-out animation to the current album
         albumContainer.classList.remove("slide-in-left", "slide-in-right");
         albumContainer.classList.add("slide-out-right");
 
-  setTimeout(() => {
-    // Change to the previous track after the slide-out animation
-    currentTrackIndex =
-      (currentTrackIndex - 1 + playlist.length) % playlist.length;
-    updateTrack(currentTrackIndex);
+        setTimeout(() => {
+          // Change to the previous track after the slide-out animation
+          currentTrackIndex =
+            (currentTrackIndex - 1 + playlist.length) % playlist.length;
+          updateTrack(currentTrackIndex);
 
-    // Automatically play the track
-    audioPlayer.play();
-    playPauseButton.textContent = "⏸";
+          // Automatically play the track
+          audioPlayer.play();
+          playPauseButton.textContent = "⏸";
 
-    // Add slide-in animation for the previous album
-    albumContainer.classList.remove("slide-out-right");
-    albumContainer.classList.add("slide-in-left");
-  }, 500); // Match the animation duration
-});
+          // Add slide-in animation for the previous album
+          albumContainer.classList.remove("slide-out-right");
+          albumContainer.classList.add("slide-in-left");
+        }, 500); // Match the animation duration
+      });
 
       // Show album and track on page load
       window.onload = () => {
@@ -815,34 +967,39 @@
         showAlbumOnLoad();
       };
 
-    shareButton.addEventListener("click", () => {
-      const trackName = playlist[currentTrackIndex].trackName.replace(/\s+/g, "-").toLowerCase();
-      const link = `https://rythym.com/share/${trackName}`;
-      shareLink.value = link;
-      // Show the share link container
-      shareLinkContainer.classList.remove("hidden");
-    });
-    copyButton.addEventListener("click", () => {
-      // Copy the link to clipboard
-      shareLink.select();
-      shareLink.setSelectionRange(0, 99999); // For mobile devices
-      document.execCommand("copy");
+      shareButton.addEventListener("click", () => {
+        const trackName = playlist[currentTrackIndex].trackName
+          .replace(/\s+/g, "-")
+          .toLowerCase();
+        const link = `https://rythym.com/share/${trackName}`;
+        shareLink.value = link;
+        // Show the share link container
+        shareLinkContainer.classList.remove("hidden");
+      });
+      copyButton.addEventListener("click", () => {
+        // Copy the link to clipboard
+        shareLink.select();
+        shareLink.setSelectionRange(0, 99999); // For mobile devices
+        document.execCommand("copy");
 
-      // Show success message
-      copySuccess.classList.add("show");
+        // Show success message
+        copySuccess.classList.add("show");
 
-      // Hide the success message after 2 seconds
-      setTimeout(() => {
-        copySuccess.classList.remove("show");
-      }, 2000);
-    });
+        // Hide the success message after 2 seconds
+        setTimeout(() => {
+          copySuccess.classList.remove("show");
+        }, 2000);
+      });
 
-    // Optional: Close the share link container when clicking outside
-    window.addEventListener("click", (e) => {
-      if (!shareLinkContainer.contains(e.target) && e.target !== shareButton) {
-        shareLinkContainer.classList.add("hidden");
-      }
-    });
-  </script>
+      // Optional: Close the share link container when clicking outside
+      window.addEventListener("click", (e) => {
+        if (
+          !shareLinkContainer.contains(e.target) &&
+          e.target !== shareButton
+        ) {
+          shareLinkContainer.classList.add("hidden");
+        }
+      });
+    </script>
   </body>
 </html>
