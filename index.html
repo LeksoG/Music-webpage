@@ -858,6 +858,8 @@
       function updateTrack(index) {
         history.pushState(null, "", "#" + index);
 
+        currentTrackIndex = index;
+
         audioSource.src = playlist[index].src;
         albumArt.src = playlist[index].albumArt;
         audioPlayer.load();
