@@ -61,6 +61,7 @@
         max-width: 500px;
         border-radius: 25px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        margin-top: -90px;
       }
 
       .tab-bar a {
@@ -416,7 +417,24 @@
       resultContainer.style.borderRadius = "15px";
       resultContainer.style.boxShadow = "0 4px 10px rgba(0, 0, 0, 0.4)";
       searchContainer.appendChild(resultContainer);
+      
+      const style = document.createElement("style");
+      style.textContent = `
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
 
+      .fade-out {
+        animation: fadeOut 0.5s forwards;
+      }
+
+      @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+      }
+    `;
+  document.head.appendChild(style);
       searchBar.addEventListener("keypress", (event) => {
         if (event.key === "Enter") {
            query = searchBar.value.trim().toLowerCase();
@@ -444,7 +462,7 @@
           resultContainer.innerHTML = `
            <img src="${track.albumArt}" style="width: 100px; height: 100px; border-radius: 10px; margin-bottom: 10px;" />
            <div style="font-size: 18px; font-weight: bold;">${track.trackName}</div>
-          <a href="#" id="playTrackLink" style="color: #ff0000; text-decoration: none;">Play</a>
+           <a href="#" id="playTrackLink" style="color: #ff0000; text-decoration: none;">Play</a>
           `;
           // Add event listener to the "Play" link
           document.getElementById("playTrackLink").addEventListener("click", () => {
@@ -459,18 +477,23 @@
           resultContainer.innerHTML = `<div style="color: #ff0000;">Music not found.</div>`;
         }
       }, 1000);
+       
+        // Add click listener to dismiss the results
+      document.addEventListener("click", handleClickOutside);
     }
   });
 
-  // Add spinner animation
-  const style = document.createElement("style");
-  style.textContent = `
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+   // Function to handle clicks outside the result container
+  function handleClickOutside(event) {
+    if (!resultContainer.contains(event.target) && event.target !== searchBar) {
+      resultContainer.classList.add("fade-out"); // Add fade-out class
+      setTimeout(() => {
+        resultContainer.style.display = "none"; // Hide after animation
+        resultContainer.classList.remove("fade-out"); // Remove class for future use
+      }, 500); // Match animation duration
+      document.removeEventListener("click", handleClickOutside);
     }
-  `;
-  document.head.appendChild(style);
+  }    
 
       const playlist = [
         {
