@@ -61,7 +61,7 @@
         max-width: 500px;
         border-radius: 25px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        margin-top: -90px;
+        margin-top: -86px;
       }
 
       .tab-bar a {
@@ -391,6 +391,94 @@
     </div>
 
     <script>
+      // Create a dropdown for suggestions
+      const suggestionDropdown = document.createElement("div");
+      suggestionDropdown.style.position = "absolute";
+      suggestionDropdown.style.top = `${searchBar.offsetTop + searchBar.offsetHeight}px`;
+      suggestionDropdown.style.left = `${searchBar.offsetLeft}px`;
+      suggestionDropdown.style.width = `${searchBar.offsetWidth}px`;
+      suggestionDropdown.style.backgroundColor = "#fff";
+      suggestionDropdown.style.border = "1px solid #ccc";
+      suggestionDropdown.style.borderRadius = "8px";
+      suggestionDropdown.style.boxShadow = "0 4px 10px rgba(0, 0, 0, 0.2)";
+      suggestionDropdown.style.zIndex = "1000";
+      suggestionDropdown.style.maxHeight = "200px";
+      suggestionDropdown.style.overflowY = "auto";
+      suggestionDropdown.style.display = "none"; // Hidden by default
+      suggestionDropdown.style.transition = "opacity 0.3s ease"; // Smooth fade-in and fade-out effect
+      suggestionDropdown.style.opacity = "0"; // Start as invisible
+      document.body.appendChild(suggestionDropdown);
+
+       // Event listener for typing in the search bar (for suggestions)
+  searchBar.addEventListener("input", (event) => {
+    const query = searchBar.value.trim().toLowerCase();
+    suggestionDropdown.innerHTML = ""; // Clear previous suggestions
+
+     if (!query) {
+      suggestionDropdown.style.display = "none"; // Hide dropdown if input is empty
+      return;
+    }
+
+    // Filter songs that match the query
+    const matchingTracks = playlist.filter((track) =>
+      track.trackName.toLowerCase().includes(query)
+    );
+
+    if (matchingTracks.length > 0) {
+      suggestionDropdown.style.display = "block";
+      suggestionDropdown.style.opacity = "1"; // Fade in the dropdown
+
+      // Display matching tracks as suggestions
+      matchingTracks.forEach((track) => {
+        const suggestionItem = document.createElement("div");
+        suggestionItem.style.padding = "10px";
+        suggestionItem.style.cursor = "pointer";
+        suggestionItem.style.borderBottom = "1px solid #eee";
+        suggestionItem.style.fontSize = "14px";
+        suggestionItem.style.color = "#333";
+        suggestionItem.style.transition = "background-color 0.3s ease"; // Smooth background color transition
+        suggestionItem.textContent = track.trackName;
+
+        // Highlight the suggestion on hover
+        suggestionItem.addEventListener("mouseenter", () => {
+          suggestionItem.style.backgroundColor = "#f5f5f5"; // Light hover effect
+        });
+        suggestionItem.addEventListener("mouseleave", () => {
+          suggestionItem.style.backgroundColor = "#fff"; // Revert to default background
+        });
+
+        // Click event to play the selected song
+        suggestionItem.addEventListener("click", () => {
+          const trackIndex = playlist.indexOf(track);
+          updateTrack(trackIndex);
+          audioPlayer.play();
+          playPauseButton.textContent = "⏸"; // Update play/pause button text
+
+          // Clear and hide the dropdown
+          suggestionDropdown.style.display = "0";
+          setTimeout(() => suggestionDropdown.style.display = "none", 300); // Hide after fade
+          searchBar.value = track.trackName; // Set the search bar to the selected song
+        });
+
+
+        suggestionDropdown.appendChild(suggestionItem);
+      });
+    } else {
+      suggestionDropdown.style.display = "0"; // Hide dropdown if no matches
+      setTimeout(() => suggestionDropdown.style.display = "none", 300); // Hide after fade
+    }
+  });
+
+  // Hide suggestions dropdown when clicking outside
+  document.addEventListener("click", (event) => {
+    if (!suggestionDropdown.contains(event.target) && event.target !== searchBar) {
+      suggestionDropdown.style.display = "0";
+      setTimeout(() => suggestionDropdown.style.display = "none", 300); // Hide after fade
+    }
+  });
+</script>
+
+<script>
       let query = '';
       const playPauseButton = document.getElementById("playPauseButton");
       const prevButton = document.getElementById("prevButton");
@@ -417,7 +505,9 @@
       resultContainer.style.borderRadius = "15px";
       resultContainer.style.boxShadow = "0 4px 10px rgba(0, 0, 0, 0.4)";
       searchContainer.appendChild(resultContainer);
-      
+    </script>
+
+    <script>
       const style = document.createElement("style");
       style.textContent = `
       @keyframes spin {
