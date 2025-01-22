@@ -917,7 +917,7 @@
 
       document.addEventListener("DOMContentLoaded", () => {
         const initialIndex = parseInt(
-          window.location.hash.replace("#", "") ?? "0"
+          window.location.hash.replace("#", "") || "0"
         );
 
         updateTrack(initialIndex);
