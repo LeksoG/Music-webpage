@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Music Finder</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #121212;
+            font-family: Arial, sans-serif;
+            color: white;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .lumina-button {
+            width: 70px;
+            height: 70px;
+            border: none;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
+            box-shadow: 0 0 15px 5px rgba(255, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .lumina-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px 10px rgba(255, 0, 0, 0.8);
+        }
+
+        .lumina-button span {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            letter-spacing: 1px;
+        }
+
+        .chatbox {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #1f1f1f;
+            border-radius: 15px;
+            padding: 20px;
+            width: 350px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            display: none;
+            flex-direction: column;
+            animation: slideUpOnce 0.5s ease-out;
+        }
+
+        .chatbox h3 {
+            margin: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 25px;
+            height: 25px;
+            background: none;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            font-size: 14px;
+            color: #fff;
+            text-align: center;
+            line-height: 21px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-button:hover {
+            background: red;
+            border-color: red;
+        }
+
+        @keyframes slideUpOnce {
+            0% { 
+                transform: translateY(100%); 
+                opacity: 0; 
+                box-shadow: 0 0 0 rgba(255, 0, 0, 0); 
+            }
+            50% {
+                transform: translateY(50%);
+                opacity: 0.5;
+                box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+            }
+            100% {
+                transform: translateY(0); 
+                opacity: 1; 
+                box-shadow: 0 0 20px rgba(255, 0, 0, 0.8); 
+            }
+        }
+
+        .suggestions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .suggestion {
+            background-color: #2b2b2b;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .suggestion:hover {
+            background-color: #3b3b3b;
+        }
+
+        .searchbar {
+            width: 90%;
+            padding: 8px;
+            border-radius: 20px;
+            border: 2px solid transparent;
+            outline: none;
+            background-color: #3b3b3b;
+            color: white;
+            font-size: 14px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .searchbar:focus {
+            border-color: red;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+        }
+
+        .searching {
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        .searchbar.spin {
+            animation: spinGlow 2s linear infinite;
+        }
+
+        @keyframes spinGlow {
+            0% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.8); }
+            50% { box-shadow: 0 0 25px rgba(255, 0, 0, 1); }
+            100% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.8); }
+        }
+
+        .no-results {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #ff4c4c;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="lumina-button" id="luminaButton" onclick="toggleChatbox()">
+        <span>Lumina</span>
+    </div>
+
+    <div class="chatbox" id="chatbox">
+        <div class="close-button" onclick="toggleChatbox()">&times;</div>
+        <h3>AI Music Finder</h3>
+        <div class="suggestions" id="suggestions">
+            <div class="suggestion" onclick="handleSuggestionClick(this.textContent)">Happy Tune</div>
+            <div class="suggestion" onclick="handleSuggestionClick(this.textContent)">Sad Symphony</div>
+            <div class="suggestion" onclick="handleSuggestionClick(this.textContent)">Energetic Vibes</div>
+        </div>
+        <div class="searching" id="searching">Searching...</div>
+        <input type="text" class="searchbar" id="searchbar" placeholder="Describe your music" oninput="updateSuggestions(this.value)" onkeypress="handleSearch(event)">
+        <div id="noResults" class="no-results">Your description did not match. Try something else.</div>
+    </div>
+
+    <script>
+        let isFirstClick = true;
+
+        function toggleChatbox() {
+            const chatbox = document.getElementById('chatbox');
+            const luminaButton = document.getElementById('luminaButton');
+            if (isFirstClick) {
+                chatbox.style.display = 'flex';
+                luminaButton.style.display = 'none';
+                isFirstClick = false;
+            } else {
+                const isChatboxVisible = chatbox.style.display === 'flex';
+                chatbox.style.display = isChatboxVisible ? 'none' : 'flex';
+                luminaButton.style.display = isChatboxVisible ? 'flex' : 'none';
+            }
+        }
+
+        function updateSuggestions(description) {
+            const tracks = [
+                'Happy Tune',
+                'Sad Symphony',
+                'Energetic Vibes',
+                'Relaxing Instrumentals',
+                'Classical Melodies',
+                'Upbeat Pop',
+                'Chill Beats',
+                'Jazz Essentials'
+            ];
+
+            const suggestions = document.getElementById('suggestions');
+
+            const results = tracks.filter(track =>
+                track.toLowerCase().includes(description.toLowerCase())
+            );
+
+            while (suggestions.firstChild) {
+                suggestions.removeChild(suggestions.firstChild);
+            }
+
+            if (description.trim() !== "" && results.length > 0) {
+                suggestions.style.display = 'flex';
+                results.forEach(track => {
+                    const suggestion = document.createElement('div');
+                    suggestion.className = 'suggestion';
+                    suggestion.textContent = track;
+                    suggestion.setAttribute('onclick', `handleSuggestionClick('${track}')`);
+                    suggestions.appendChild(suggestion);
+                });
+            } else {
+                suggestions.style.display = 'none';
+            }
+        }
+
+        function handleSearch(event) {
+            if (event.key === 'Enter') {
+                startSearch();
+            }
+        }
+
+        function handleSuggestionClick(suggestion) {
+            const searchBar = document.getElementById('searchbar');
+            searchBar.value = suggestion;
+            startSearch();
+        }
+
+        function startSearch() {
+            const searchBar = document.getElementById('searchbar');
+            const searchingText = document.getElementById('searching');
+            const noResults = document.getElementById('noResults');
+            const suggestions = document.getElementById('suggestions');
+
+            const tracks = [
+                'Happy Tune',
+                'Sad Symphony',
+                'Energetic Vibes',
+                'Relaxing Instrumentals',
+                'Classical Melodies',
+                'Upbeat Pop',
+                'Chill Beats',
+                'Jazz Essentials'
+            ];
+
+            const description = searchBar.value;
+            const results = tracks.filter(track =>
+                track.toLowerCase().includes(description.toLowerCase())
+            );
+
+            searchingText.style.display = 'block';
+            searchBar.classList.add('spin');
+            noResults.style.display = 'none';
+
+            setTimeout(() => {
+                searchingText.style.display = 'none';
+                searchBar.classList.remove('spin');
+
+                if (results.length === 0) {
+                    noResults.style.display = 'block';
+                } else {
+                    noResults.style.display = 'none';
+                }
+
+                suggestions.style.display = results.length > 0 ? 'flex' : 'none';
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
