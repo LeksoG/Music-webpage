@@ -1,0 +1,333 @@
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Arial", sans-serif;
+  background: linear-gradient(135deg, #1c1f26, #2a2f38);
+  color: #fff;
+  height: 100vh;
+  overflow: hidden; /* Prevent horizontal scroll */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Search Bar */
+.search-container {
+  margin: 20px 0;
+}
+
+.search-bar {
+  width: 300px;
+  height: 50px;
+  border: none;
+  border-radius: 25px;
+  padding: 0 20px;
+  outline: 2px solid white;
+  background-color: #2d3138;
+  color: white;
+  font-size: 16px;
+  text-align: center;
+  transition: all 0.4s ease;
+}
+
+.search-bar:focus {
+  width: 500px;
+  box-shadow: 0 0 20px rgba(255, 182, 193, 0.8);
+  background-color: #3a4049;
+  outline: none;
+}
+
+/* Tab Bar */
+.tab-bar {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  background-color: #2d3138;
+  padding: 10px 0;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.tab-bar a {
+  text-decoration: none;
+  color: ghostwhite;
+  font-size: 16px;
+  padding: 10px 15px;
+  border-radius: 15px;
+  background-color: transparent;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.tab-bar a:hover {
+  background-color: rgba(255, 0, 0, 0.7);
+  transform: scale(1.1);
+}
+
+.tab-bar a.active {
+  background-color: #ff0000;
+  color: white;
+  font-weight: bold;
+}
+
+/* Music Controls */
+.music-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+  padding: 15px;
+  background-color: #2d3138;
+  border-radius: 50px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  margin-bottom: 10px;
+}
+
+.control-button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #444b54, #2d3138);
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
+}
+
+.control-button:hover {
+  transform: scale(1.1);
+  background: linear-gradient(135deg, #ff0000, #aa0000);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+}
+
+.play-pause {
+  width: 70px;
+  height: 70px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+/* Album Container */
+.album-container {
+  width: 350px;
+  height: 350px;
+  background: rgba(45, 49, 56, 0.8);
+  border-radius: 20px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  filter: blur(30px);
+  transition: opacity 0.8s ease, filter 0.8s ease-in-out;
+}
+
+.album-container.active {
+  opacity: 1;
+  filter: blur(0);
+}
+
+.album-container.hidden {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.album-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Track Name Styling */
+.track-name {
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  margin-top: 0px;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+  letter-spacing: 1px;
+  font-family: "Arial", sans-serif;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+/* Slide animations */
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutToLeft {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slideOutToRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.slide-in-left {
+  animation: slideInFromLeft 0.5s ease forwards;
+}
+
+.slide-in-right {
+  animation: slideInFromRight 0.5s ease forwards;
+}
+
+.slide-out-left {
+  animation: slideOutToLeft 0.5s ease forwards;
+}
+
+.slide-out-right {
+  animation: slideOutToRight 0.5s ease forwards;
+}
+.lyrics-modal {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 20px;
+  border-radius: 15px;
+  max-width: 80%;
+  max-height: 70%;
+  overflow-y: auto;
+  z-index: 1000;
+}
+.lyrics-modal button {
+  background-color: #ff0000;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.lyrics-modal button:hover {
+  background-color: #cc0000;
+}
+/* Share Button Styles */
+.share-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease;
+}
+
+.share-button:hover {
+  transform: scale(1.1);
+}
+
+/* Share Link Container */
+.share-link-container {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  z-index: 1000;
+}
+
+.hidden {
+  display: none;
+}
+
+.share-link {
+  width: 300px;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: white;
+  color: black;
+}
+
+.copy-button {
+  background-color: #ff0000;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.copy-button:hover {
+  background-color: #cc0000;
+}
+
+.copy-success {
+  margin-top: 10px;
+  color: lime;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.copy-success.show {
+  opacity: 1;
+}
