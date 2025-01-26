@@ -273,6 +273,27 @@ playPauseButton.addEventListener("click", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+
+    // Add Event Listeners
+playPauseButton.addEventListener("click", () => {
+    if (audioPlayer.paused) {
+        audioPlayer.play();
+        playPauseButton.textContent = "⏸";
+    } else {
+        audioPlayer.pause();
+        playPauseButton.textContent = "▶";
+    }
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const initialIndex = parseInt(
+        window.location.hash.replace("#", "") || "0"
+    );
+
+    updateTrack(initialIndex);
+    showAlbumOnLoad();
+});
     const initialIndex = parseInt(
         window.location.hash.replace("#", "") || "0"
     );

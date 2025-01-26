@@ -60,8 +60,30 @@
       <button class="copy-button" id="copyButton">Copy</button>
       <div class="copy-success" id="copySuccess">Link copied!</div>
     </div>
+    <div class="lumina-button" id="luminaButton" onclick="toggleChatbox()">
+        <span>Lumina</span>
+    </div>
 
+    <div class="chatbox" id="chatbox">
+        <div class="close-button" onclick="toggleChatbox()">&times;</div>
+        <h3>AI Music Finder</h3>
+        <div class="suggestions" id="suggestions">
+            <div class="suggestion" onclick="handleSuggestionClick(this.textContent)">Happy Tune</div>
+            <div class="suggestion" onclick="handleSuggestionClick(this.textContent)">Sad Symphony</div>
+            <div class="suggestion" onclick="handleSuggestionClick(this.textContent)">Energetic Vibes</div>
+            <div class="suggestion" onclick="handleSuggestionClick(this.textContent)">Relaxing Instrumentals</div>
+            <div class="suggestion" onclick="handleSuggestionClick(this.textContent)">Classical Melodies</div>
+            <div class="suggestion" onclick="handleSuggestionClick(this.textContent)">Upbeat Pop</div>
+            <div class="suggestion" onclick="handleSuggestionClick(this.textContent)">Chill Beats</div>
+            <div class="suggestion" onclick="handleSuggestionClick(this.textContent)">Rock</div>
+        </div>
+        <div class="searching" id="searching">Searching...</div>
+        <input type="text" class="searchbar" id="searchbar" placeholder="Describe your music" oninput="updateSuggestions(this.value)" onkeypress="handleSearch(event)">
+        <div id="noResults" class="no-results">Your description did not match. Try something else.</div>
+        <div id="resultsContainer"></div> <!-- This will show the filtered songs -->
+    </div>
     <script src="playlist.js"></script>
     <script src="script.js"></script>
+   <script src="lumina.js"></script>
   </body>
 </html>
