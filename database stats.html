@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Stats Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsPDF"></script> <!-- For PDF export -->
+   <style>
+    body { font-family: 'Arial', sans-serif; background-color: #121212; color: #fff; text-align: center; margin: 0; transition: background-color 0.5s ease, color 0.5s ease; }
+    .container { width: 80%; margin: 20px auto; background: #1e1e1e; padding: 20px; border-radius: 8px; box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1); }
+    canvas { 
+        max-width: 100%; 
+        width: 85% !important; /* Adjusted to make the canvas smaller */
+        height: 200px; /* Adjusted height to fit better */
+        margin-bottom: 20px; 
+        cursor: pointer; 
+    }
+    button { 
+        margin: 8px; padding: 8px 15px; cursor: pointer; 
+        background: #007BFF; color: white; 
+        border: none; border-radius: 5px; transition: 0.3s; font-size: 14px;
+        font-weight: 600;
+    }
+    button:hover { background: #0056b3; }
+    .stats { display: flex; justify-content: space-around; margin-top: 20px; }
+    .stat-card { 
+        background: #252525; padding: 15px; border-radius: 8px; 
+        box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.1); 
+        transition: background-color 0.5s ease, transform 0.5s ease;
+    }
+    .stat-card.red { background: #FF3B30; }
+    .stat-card.blue { background: #007BFF; }
+    .growth { font-size: 14px; font-weight: 600; color: #28a745; }
+    .growth-negative { font-size: 14px; font-weight: 600; color: #dc3545; }
+    .hamburger { position: absolute; top: 10px; left: 10px; background: none; border: none; cursor: pointer; font-size: 24px; color: white; }
+    .hamburger.close { font-size: 28px; }
+    .sidebar { position: fixed; left: -250px; top: 0; width: 250px; height: 100vh; background: #1e1e1e; padding-top: 60px; transition: 0.3s; box-shadow: 2px 0px 5px rgba(255, 255, 255, 0.1); }
+    .sidebar a { display: block; padding: 15px; color: white; text-decoration: none; }
+    .sidebar a:hover { background: #007BFF; }
+    .sidebar .dropdown-content { display: none; padding-left: 20px; transition: 0.3s ease; }
+    .sidebar .dropdown.open .dropdown-content { display: block; transition: 0.3s ease; }
+    .open { left: 0; }
+    .light-mode { background-color: #f9f9f9; color: #000; }
+    .light-mode .container { background: #fff; }
+    .tooltip {
+        position: absolute;
+        background-color: rgba(0, 123, 255, 0.8);
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        display: none;
+        font-size: 12px;
+        transition: opacity 0.3s ease;
+    }
+</style>
+</head>
+<body>
+    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+    <div class="sidebar" id="sidebar">
+        <button class="hamburger close" onclick="toggleSidebar()">✖</button>
+        <a href="#">Dashboard</a>
+        <a href="#">Growth</a>
+        <a href="#">Analytics</a>
+        <div class="dropdown">
+            <a href="javascript:void(0)" onclick="toggleSettingsDropdown()">Settings</a>
+            <div class="dropdown-content">
+                <a href="#" onclick="toggleTheme()">Toggle Dark/Light Mode</a>
+                <a href="#">Profile Settings</a>
+                <a href="#">Privacy Settings</a>
+                <a href="#">Notification Settings</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h2>Real-Time Statistics</h2>
+        
+        <div class="stats">
+            <div class="stat-card" id="totalSignups">Total Sign-ups: 0</div>
+            <div class="stat-card" id="totalVisits">Total Visits: 0</div>
+            <div class="stat-card" id="totalSongs">Total Song Hours: 0</div>
+            <div class="stat-card" id="totalUsers">Total Users: 0</div>
+        </div>
+        
+        <h3>Sign-ups</h3>
+        <canvas id="signupsChart" onclick="showGrowth('signups')"></canvas>
+        <div id="signupsGrowth" class="growth"></div>
+
+        <h3>Visits</h3>
+        <canvas id="visitsChart" onclick="showGrowth('visits')"></canvas>
+        <div id="visitsGrowth" class="growth"></div>
+
+        <h3>Song Hours Listened</h3>
+        <canvas id="songsChart" onclick="showGrowth('songs')"></canvas>
+        <div id="songsGrowth" class="growth"></div>
+
+        <h3>Total Users</h3>
+        <canvas id="usersChart" onclick="showGrowth('users')"></canvas>
+        <div id="usersGrowth" class="growth"></div>
+
+        <button onclick="exportToPDF()">Export to PDF</button>
+        <button onclick="filterData()">Filter Data</button>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        let chartType = 'line';
+        let signupsChart, visitsChart, songsChart, usersChart;
+        let darkMode = true;
+        let tooltip = document.getElementById('tooltip');
+
+        function fetchData() {
+            let testData = {
+                signups: { labels: ['Jan', 'Feb', 'Mar', 'Apr'], data: [10, 20, 30, 40] },
+                visits: { labels: ['Jan', 'Feb', 'Mar', 'Apr'], data: [50, 60, 70, 80] },
+                songHours: { labels: ['Jan', 'Feb', 'Mar', 'Apr'], data: [5, 15, 25, 35] },
+                users: { labels: ['Jan', 'Feb', 'Mar', 'Apr'], data: [1000, 1200, 1500, 1700] }
+            };
+            
+            signupsChart = updateChart(signupsChart, 'signupsChart', 'Sign-ups', testData.signups);
+            visitsChart = updateChart(visitsChart, 'visitsChart', 'Visits', testData.visits);
+            songsChart = updateChart(songsChart, 'songsChart', 'Song Hours', testData.songHours);
+            usersChart = updateChart(usersChart, 'usersChart', 'Users', testData.users);
+            updateStats(testData);
+        }
+
+        function updateChart(chart, canvasId, label, values) {
+            let ctx = document.getElementById(canvasId).getContext('2d');
+            if (chart) chart.destroy();
+            return new Chart(ctx, {
+                type: chartType,
+                data: {
+                    labels: values.labels,
+                    datasets: [{
+                        label: label,
+                        data: values.data,
+                        backgroundColor: getChartColor('background'),
+                        borderColor: getChartColor('border'),
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    onHover: (event, chartElement) => {
+                        if (chartElement.length) {
+                            let index = chartElement[0]._index;
+                            let dataValue = values.data[index];
+                            let previousValue = index > 0 ? values.data[index - 1] : 0;
+                            let growth = ((dataValue - previousValue) / previousValue) * 100;
+                            showTooltip(event, growth);
+                        } else {
+                            hideTooltip();
+                        }
+                    }
+                }
+            });
+        }
+
+        function getChartColor(type) {
+            return darkMode ? (type === 'background' ? 'rgba(255, 59, 48, 0.2)' : 'rgba(255, 59, 48, 1)') : (type === 'background' ? 'rgba(0, 123, 255, 0.2)' : 'rgba(0, 123, 255, 1)');
+        }
+
+        function showTooltip(event, growth) {
+            tooltip.textContent = `${growth > 0 ? '+' : ''}${growth.toFixed(2)}%`;
+            tooltip.style.left = `${event.offsetX + 10}px`;
+            tooltip.style.top = `${event.offsetY - 25}px`;
+            tooltip.style.display = 'block';
+        }
+
+        function hideTooltip() {
+            tooltip.style.display = 'none';
+        }
+
+        function updateStats(data) {
+            document.getElementById('totalSignups').innerText = `Total Sign-ups: ${data.signups.data.reduce((a, b) => a + b, 0)}`;
+            document.getElementById('totalVisits').innerText = `Total Visits: ${data.visits.data.reduce((a, b) => a + b, 0)}`;
+            document.getElementById('totalSongs').innerText = `Total Song Hours: ${data.songHours.data.reduce((a, b) => a + b, 0)}`;
+            document.getElementById('totalUsers').innerText = `Total Users: ${data.users.data[data.users.data.length - 1]}`;
+        }
+
+        function toggleSidebar() {
+            let sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("open");
+        }
+
+        function toggleSettingsDropdown() {
+            document.querySelector(".sidebar .dropdown").classList.toggle("open");
+        }
+
+        function toggleTheme() {
+            darkMode = !darkMode;
+            document.body.classList.toggle("light-mode");
+            fetchData();
+        }
+
+        function showGrowth(graphType) {
+            let currentData, previousData;
+            let growthElement;
+            switch (graphType) {
+                case 'signups':
+                    currentData = 40; // replace with dynamic data
+                    previousData = 30; // replace with dynamic data
+                    growthElement = document.getElementById('signupsGrowth');
+                    break;
+                case 'visits':
+                    currentData = 80; // replace with dynamic data
+                    previousData = 70; // replace with dynamic data
+                    growthElement = document.getElementById('visitsGrowth');
+                    break;
+                case 'songs':
+                    currentData = 35; // replace with dynamic data
+                    previousData = 25; // replace with dynamic data
+                    growthElement = document.getElementById('songsGrowth');
+                    break;
+                case 'users':
+                    currentData = 1700; // replace with dynamic data
+                    previousData = 1500; // replace with dynamic data
+                    growthElement = document.getElementById('usersGrowth');
+                    break;
+            }
+
+            let growthPercentage = calculateGrowth(currentData, previousData);
+            growthElement.textContent = growthPercentage > 0 ? `+${growthPercentage.toFixed(2)}%` : `${growthPercentage.toFixed(2)}%`;
+            growthElement.classList.remove("growth-negative");
+            if (growthPercentage < 0) {
+                growthElement.classList.add("growth-negative");
+            }
+        }
+
+        function calculateGrowth(current, previous) {
+            return ((current - previous) / previous) * 100;
+        }
+
+        function exportToPDF() {
+            const doc = new jsPDF();
+            doc.text("Dashboard PDF Export", 20, 20);
+            doc.addImage(document.getElementById("signupsChart"), "PNG", 20, 30, 180, 90);
+            doc.save("dashboard.pdf");
+        }
+
+        function filterData() {
+            alert("Data filtering functionality will be implemented.");
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>

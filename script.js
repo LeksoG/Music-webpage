@@ -376,4 +376,4 @@ window.addEventListener("click", (e) => {
     ) {
         shareLinkContainer.classList.add("hidden");
     }
-});
+ });

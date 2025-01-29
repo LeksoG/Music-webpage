@@ -14,6 +14,47 @@ function toggleChatbox() {
     }
 }
 
+playPauseButton.addEventListener('click', () => {
+    if (audioPlayer.paused) {
+        audioPlayer.play();
+        playPauseButton.textContent = "⏸"; // Change to pause icon
+    } else {
+        audioPlayer.pause();
+        playPauseButton.textContent = "▶"; // Change to play icon
+    }
+});
+
+// Sync the button state whenever playback starts or ends
+audioPlayer.addEventListener('play', () => {
+    playPauseButton.textContent = "⏸"; // Change to pause icon
+});
+
+audioPlayer.addEventListener('pause', () => {
+    playPauseButton.textContent = "▶"; // Change to play icon
+});
+
+// Function to determine if input is music-related
+function isMusicRelated(input) {
+    const musicKeywords = [
+        'song', 'track', 'album', 'artist', 'music', 'playlist',
+        'genre', 'melody', 'tune', 'beats', 'rhythm'
+    ];
+    return musicKeywords.some(keyword => input.toLowerCase().includes(keyword));
+}
+
+function generateChatResponse(input, isUser = false) {
+    const chatboxMessages = document.getElementById('chatboxMessages');
+    const message = document.createElement('div');
+    message.className = `chat-response ${isUser ? 'user' : ''}`; // Add 'user' class for user messages
+    message.textContent = input;
+    chatboxMessages.appendChild(message);
+
+    // Scroll to the bottom of the chatbox
+    chatboxMessages.scrollTop = chatboxMessages.scrollHeight;
+}
+
+
+// Update suggestions or respond in the chatbox
 function updateSuggestions(description) {
     const tracks = [
         'Happy Tune',
@@ -35,7 +76,11 @@ function updateSuggestions(description) {
         suggestions.removeChild(suggestions.firstChild);
     }
 
-    if (description.trim() !== "" && results.length > 0) {
+    if (isMusicRelated(description)) {
+        // Show a chat-style response for music-related input
+        generateChatResponse(`Searching for music related to "${description}"`);
+    } else if (description.trim() !== "" && results.length > 0) {
+        // Show suggestions if input matches track names
         suggestions.style.display = 'flex';
         results.forEach(track => {
             const suggestion = document.createElement('div');
@@ -46,15 +91,20 @@ function updateSuggestions(description) {
         });
     } else {
         suggestions.style.display = 'none';
+        generateChatResponse(`I'm sorry, I couldn't find anything related to "${description}".`);
     }
 }
 
+// Function to handle the Enter key in the search bar
 function handleSearch(event) {
     if (event.key === 'Enter') {
-        startSearch();
+        const searchBar = document.getElementById('searchbar');
+        const description = searchBar.value.trim();
+        updateSuggestions(description);
     }
 }
 
+// Function to handle suggestion clicks
 function handleSuggestionClick(suggestion) {
     const searchBar = document.getElementById('searchbar');
     searchBar.value = suggestion;
@@ -170,4 +220,4 @@ function playSong(trackName) {
     } else {
         console.error('Song not found in playlist:', trackName);
     }
-}
+  }

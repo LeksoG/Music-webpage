@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Chatbox - Lumina</title>
+  <style>
+    body {
+      font-family: "Arial", sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #0d0d0d;
+      color: #ffffff;
+      height: 100vh;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    /* Chat Button */
+    .chat-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #ff1744, #ff616f);
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 23, 68, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .chat-button:hover {
+      box-shadow: 0 6px 20px rgba(255, 23, 68, 1);
+    }
+
+    .chat-button img {
+      width: 30px;
+      height: 30px;
+    }
+
+    /* Chatbox */
+    .chatbox {
+      position: fixed;
+      bottom: -500px;
+      right: 20px;
+      width: 350px;
+      height: 450px;
+      background: #1a1a1a;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      opacity: 0;
+    }
+
+    .chatbox.active {
+      bottom: 80px;
+      opacity: 1;
+      box-shadow: 0 0 20px 5px rgba(255, 23, 68, 0.7);
+      animation: glowEffect 1s forwards;
+    }
+
+    @keyframes glowEffect {
+      0% {
+        box-shadow: 0 0 20px 5px rgba(255, 23, 68, 0.7);
+      }
+      100% {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+      }
+    }
+
+    /* Chatbox Header */
+    .chatbox-header {
+      background: linear-gradient(135deg, #ff1744, #ff616f);
+      color: white;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chatbox-header span {
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .chatbox-header button {
+      background: none;
+      border: 1px solid white;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: background 0.3s ease;
+    }
+
+    .chatbox-header button:hover {
+      background: white;
+      color: #ff1744;
+    }
+
+    /* Chatbox Body */
+    .chatbox-body {
+      flex: 1;
+      background: #0d0d0d;
+      padding: 10px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .chatbox-body .message {
+      max-width: 80%;
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .chatbox-body .message.user {
+      background: #ff1744;
+      color: white;
+      align-self: flex-end;
+    }
+
+    .chatbox-body .message.lumina {
+      background: #1a1a1a;
+      color: white;
+      align-self: flex-start;
+      border: 1px solid #ff616f;
+      position: relative;
+    }
+
+    /* Copy Button */
+    .chatbox-body .message.lumina .copy-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: none;
+      border: none;
+      color: #ff616f;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .chatbox-body .message.lumina .copy-btn:hover {
+      color: white;
+    }
+
+    /* Chatbox Footer */
+    .chatbox-footer {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Suggestions with Animation */
+    .suggestions {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      opacity: 0;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    .suggestion-button {
+      background: #1a1a1a;
+      color: #ff616f;
+      border: 1px solid #ff616f;
+      padding: 5px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .suggestion-button:hover {
+      background: #ff616f;
+      color: white;
+    }
+
+    /* Chat Input */
+    .chatbox-footer input {
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #ff616f;
+      background: #0d0d0d;
+      color: white;
+      outline: none;
+    }
+
+    .chatbox-footer button {
+      padding: 6px 10px;
+      background: #ff1744;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .chatbox-footer button:hover {
+      background: #ff616f;
+    }
+
+    /* Typing Indicator */
+    .typing-indicator {
+      display: none;
+      font-style: italic;
+      font-size: 12px;
+      color: #b3b3b3;
+      display: flex;
+      gap: 4px;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Chat Button -->
+  <button class="chat-button" onclick="toggleChatbox()">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/artificial-intelligence.png" alt="AI Icon">
+  </button>
+
+  <!-- Chatbox -->
+  <div class="chatbox" id="chatbox">
+    <div class="chatbox-header">
+      <span>Hi, I'm Lumina!</span>
+    </div>
+    <div class="chatbox-body" id="chatbox-body">
+      <div class="message lumina">
+        Hi! I'm Lumina, your personal AI assistant.
+      </div>
+    </div>
+    <div class="chatbox-footer">
+      <div class="suggestions" id="suggestions"></div>
+      <input type="text" id="chat-input" placeholder="Type a message..." oninput="showSuggestions()" />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const chatbox = document.getElementById("chatbox");
+    const suggestions = document.getElementById("suggestions");
+
+    function toggleChatbox() {
+      chatbox.classList.toggle("active");
+    }
+
+    function showSuggestions() {
+      suggestions.style.opacity = 1;
+      // Dynamically update suggestions...
+    }
+
+    function sendMessage() {
+      // Handle user message and Lumina response...
+    }
+  </script>
+</body>
+</html>
