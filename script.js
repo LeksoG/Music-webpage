@@ -275,25 +275,25 @@ playPauseButton.addEventListener("click", () => {
 document.addEventListener("DOMContentLoaded", () => {
 
     // Add Event Listeners
-playPauseButton.addEventListener("click", () => {
-    if (audioPlayer.paused) {
-        audioPlayer.play();
-        playPauseButton.textContent = "⏸";
-    } else {
-        audioPlayer.pause();
-        playPauseButton.textContent = "▶";
-    }
-});
+    playPauseButton.addEventListener("click", () => {
+        if (audioPlayer.paused) {
+            audioPlayer.play();
+            playPauseButton.textContent = "⏸";
+        } else {
+            audioPlayer.pause();
+            playPauseButton.textContent = "▶";
+        }
+    });
 
 
-document.addEventListener("DOMContentLoaded", () => {
-    const initialIndex = parseInt(
-        window.location.hash.replace("#", "") || "0"
-    );
+    document.addEventListener("DOMContentLoaded", () => {
+        const initialIndex = parseInt(
+            window.location.hash.replace("#", "") || "0"
+        );
 
-    updateTrack(initialIndex);
-    showAlbumOnLoad();
-});
+        updateTrack(initialIndex);
+        showAlbumOnLoad();
+    });
     const initialIndex = parseInt(
         window.location.hash.replace("#", "") || "0"
     );
@@ -376,4 +376,44 @@ window.addEventListener("click", (e) => {
     ) {
         shareLinkContainer.classList.add("hidden");
     }
- });
+});
+
+// Hamburger Menu
+
+function toggleMenu() {
+    const hamburger = document.querySelector('.hamburger');
+    const menu = document.querySelector('.menu-options');
+    hamburger.classList.toggle('active');
+    menu.classList.toggle('active');
+}
+
+function toggleCustomize() {
+    const customizeSection = document.getElementById('customizeSection');
+    customizeSection.style.display = customizeSection.style.display === 'none' || customizeSection.style.display === '' ? 'flex' : 'none';
+}
+
+function changeButtonColor(event) {
+    const color = event.target.value;
+    document.documentElement.style.setProperty('--button-hover-color', color);
+    document.querySelector('.color-picker').style.boxShadow = `0 0 10px ${color}`;
+}
+
+function toggleDarkLight() {
+    const body = document.body;
+    const isLightMode = body.classList.toggle("light-mode");
+
+    if (isLightMode) {
+        document.documentElement.style.setProperty('--button-color', '#ddd');
+        document.documentElement.style.setProperty('--menu-bg', '#f4f4f4');
+        document.documentElement.style.setProperty('--menu-text', 'black');
+    } else {
+        document.documentElement.style.setProperty('--button-color', '#333');
+        document.documentElement.style.setProperty('--menu-bg', '#181818');
+        document.documentElement.style.setProperty('--menu-text', 'white');
+    }
+}
+
+function resizeButton(event) {
+    const size = event.target.value;
+    document.documentElement.style.setProperty('--button-size', size + 'px');
+}

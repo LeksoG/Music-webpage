@@ -7,40 +7,59 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <!-- Hamburger Menu -->
     <div class="menu-container">
-    <div class="hamburger" onclick="toggleMenu()">
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-    </div>
-    <div class="menu-options">
-      <div class="music-options">
-        <p>Favorites</p>
-        <p>Wishlist</p>
-        <p>Library</p>
+      <div class="hamburger" onclick="toggleMenu()">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
       </div>
-      <div class="customize-options" onclick="toggleCustomize()">
-        <p>Customize</p>
-      </div>
-      <div class="customize-section" id="customizeSection">
-        <label for="colorPicker">Choose Button Color:</label>
-        <input type="color" id="colorPicker" class="color-picker" onchange="changeButtonColor(event)">
-
-        <div class="toggle-label">
-          <input type="checkbox" id="darkLightToggle" onclick="toggleDarkLight()">
-          <label for="darkLightToggle">Toggle Dark/Light Mode</label>
+      <div class="menu-options">
+        <div class="music-options">
+          <p>Favorites</p>
+          <p>Wishlist</p>
+          <p>Library</p>
         </div>
+        <div class="customize-options" onclick="toggleCustomize()">
+          <p>Customize</p>
+        </div>
+        <div class="customize-section" id="customizeSection">
+          <label for="colorPicker">Choose Button Color:</label>
+          <input
+            type="color"
+            id="colorPicker"
+            class="color-picker"
+            onchange="changeButtonColor(event)"
+          />
 
-        <div class="resize-options">
-          <label for="resizeSlider">Resize Menu Button:</label>
-          <input type="range" id="resizeSlider" class="resize-slider" min="10" max="30" value="12" onchange="resizeButton(event)">
+          <div class="toggle-label">
+            <input
+              type="checkbox"
+              id="darkLightToggle"
+              onclick="toggleDarkLight()"
+            />
+            <label for="darkLightToggle">Toggle Dark/Light Mode</label>
+          </div>
+
+          <div class="resize-options">
+            <label for="resizeSlider">Resize Menu Button:</label>
+            <input
+              type="range"
+              id="resizeSlider"
+              class="resize-slider"
+              min="10"
+              max="30"
+              value="12"
+              onchange="resizeButton(event)"
+            />
+          </div>
+        </div>
+        <div class="settings-options">
+          <p>Settings</p>
         </div>
       </div>
-      <div class="settings-options">
-        <p>Settings</p>
-      </div>
     </div>
-  </div>
+
     <!-- Search Bar -->
     <div class="search-container">
       <input
@@ -52,41 +71,41 @@
     </div>
 
     <!-- Tab Bar -->
-<div class="tab-bar" id="tabBar">
-  <a href="#" id="homeTab">Home</a>
-  <a href="#" id="artistTab">Artist</a>
-  <a href="#">Genre</a>
-  <a href="#">Albums</a>
-  <a href="#">Playlists</a>
-</div>
+    <div class="tab-bar" id="tabBar">
+      <a href="#" id="homeTab">Home</a>
+      <a href="#" id="artistTab">Artist</a>
+      <a href="#">Genre</a>
+      <a href="#">Albums</a>
+      <a href="#">Playlists</a>
+    </div>
 
-<!-- Content for Artist Page -->
-<div id="artistPage" class="hidden">
-  <h2>Listened to recently:</h2>
+    <!-- Content for Artist Page -->
+    <div id="artistPage" class="hidden">
+      <h2>Listened to recently:</h2>
 
-  <div class="section">
-    <div class="profile-item">
-      <img src="album1.jpg" alt="Album 1" class="profile-img">
-      <span class="artist-name">Artist 1</span>
+      <div class="section">
+        <div class="profile-item">
+          <img src="album1.jpg" alt="Album 1" class="profile-img" />
+          <span class="artist-name">Artist 1</span>
+        </div>
+        <div class="profile-item">
+          <img src="album2.jpg" alt="Album 2" class="profile-img" />
+          <span class="artist-name">Artist 2</span>
+        </div>
+        <div class="profile-item">
+          <img src="album3.jpg" alt="Album 3" class="profile-img" />
+          <span class="artist-name">Artist 3</span>
+        </div>
+        <div class="profile-item">
+          <img src="album4.jpg" alt="Album 4" class="profile-img" />
+          <span class="artist-name">Artist 4</span>
+        </div>
+        <div class="profile-item">
+          <img src="album5.jpg" alt="Album 5" class="profile-img" />
+          <span class="artist-name">Artist 5</span>
+        </div>
+      </div>
     </div>
-    <div class="profile-item">
-      <img src="album2.jpg" alt="Album 2" class="profile-img">
-      <span class="artist-name">Artist 2</span>
-    </div>
-    <div class="profile-item">
-      <img src="album3.jpg" alt="Album 3" class="profile-img">
-      <span class="artist-name">Artist 3</span>
-    </div>
-    <div class="profile-item">
-      <img src="album4.jpg" alt="Album 4" class="profile-img">
-      <span class="artist-name">Artist 4</span>
-    </div>
-    <div class="profile-item">
-      <img src="album5.jpg" alt="Album 5" class="profile-img">
-      <span class="artist-name">Artist 5</span>
-    </div>
-  </div>
-</div>
 
     <!-- Album Pop-Up -->
     <div class="album-container" id="albumContainer">
@@ -123,29 +142,79 @@
       <div class="copy-success" id="copySuccess">Link copied!</div>
     </div>
     <div class="lumina-button" id="luminaButton" onclick="toggleChatbox()">
-        <span>Lumina</span>
+      <span>Lumina</span>
     </div>
 
     <div class="chatbox" id="chatbox">
-        <div class="close-button" onclick="toggleChatbox()">&times;</div>
-        <h3>AI Music Finder</h3>
-        <div class="suggestions" id="suggestions">
-            <div class="suggestion" onclick="handleSuggestionClick(this.textContent)">Happy Tune</div>
-            <div class="suggestion" onclick="handleSuggestionClick(this.textContent)">Sad Symphony</div>
-            <div class="suggestion" onclick="handleSuggestionClick(this.textContent)">Energetic Vibes</div>
-            <div class="suggestion" onclick="handleSuggestionClick(this.textContent)">Relaxing Instrumentals</div>
-            <div class="suggestion" onclick="handleSuggestionClick(this.textContent)">Classical Melodies</div>
-            <div class="suggestion" onclick="handleSuggestionClick(this.textContent)">Upbeat Pop</div>
-            <div class="suggestion" onclick="handleSuggestionClick(this.textContent)">Chill Beats</div>
-            <div class="suggestion" onclick="handleSuggestionClick(this.textContent)">Rock</div>
+      <div class="close-button" onclick="toggleChatbox()">&times;</div>
+      <h3>AI Music Finder</h3>
+      <div class="suggestions" id="suggestions">
+        <div
+          class="suggestion"
+          onclick="handleSuggestionClick(this.textContent)"
+        >
+          Happy Tune
         </div>
-        <div class="searching" id="searching">Searching...</div>
-        <input type="text" class="searchbar" id="searchbar" placeholder="Describe your music" oninput="updateSuggestions(this.value)" onkeypress="handleSearch(event)">
-        <div id="noResults" class="no-results">Your description did not match. Try something else.</div>
-        <div id="resultsContainer"></div> <!-- This will show the filtered songs -->
+        <div
+          class="suggestion"
+          onclick="handleSuggestionClick(this.textContent)"
+        >
+          Sad Symphony
+        </div>
+        <div
+          class="suggestion"
+          onclick="handleSuggestionClick(this.textContent)"
+        >
+          Energetic Vibes
+        </div>
+        <div
+          class="suggestion"
+          onclick="handleSuggestionClick(this.textContent)"
+        >
+          Relaxing Instrumentals
+        </div>
+        <div
+          class="suggestion"
+          onclick="handleSuggestionClick(this.textContent)"
+        >
+          Classical Melodies
+        </div>
+        <div
+          class="suggestion"
+          onclick="handleSuggestionClick(this.textContent)"
+        >
+          Upbeat Pop
+        </div>
+        <div
+          class="suggestion"
+          onclick="handleSuggestionClick(this.textContent)"
+        >
+          Chill Beats
+        </div>
+        <div
+          class="suggestion"
+          onclick="handleSuggestionClick(this.textContent)"
+        >
+          Rock
+        </div>
+      </div>
+      <div class="searching" id="searching">Searching...</div>
+      <input
+        type="text"
+        class="searchbar"
+        id="searchbar"
+        placeholder="Describe your music"
+        oninput="updateSuggestions(this.value)"
+        onkeypress="handleSearch(event)"
+      />
+      <div id="noResults" class="no-results">
+        Your description did not match. Try something else.
+      </div>
+      <div id="resultsContainer"></div>
+      <!-- This will show the filtered songs -->
     </div>
     <script src="playlist.js"></script>
     <script src="script.js"></script>
-   <script src="lumina.js"></script>
+    <script src="lumina.js"></script>
   </body>
 </html>
