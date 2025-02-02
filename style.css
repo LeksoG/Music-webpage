@@ -562,3 +562,11 @@ body {
     font-weight: bold;
     color: #FFFFFF;
 }
+
+:root {
+    --button-color: #333; /* Default dark button */
+    --button-hover-color: #d12e2e; /* Default hover effect */
+    --menu-bg: #181818; /* Sidebar background */
+    --menu-text: white;
+    --button-size: 12px; /* Default button size */
+  }

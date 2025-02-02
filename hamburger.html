@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hamburger Menu</title>
+  <style>
+    :root {
+      --button-color: #333; /* Default dark button */
+      --button-hover-color: #d12e2e; /* Default hover effect */
+      --menu-bg: #181818; /* Sidebar background */
+      --menu-text: white;
+      --button-size: 12px; /* Default button size */
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: var(--menu-text);
+      transition: background-color 0.5s ease, color 0.5s ease;
+    }
+
+    .menu-container {
+      position: relative;
+    }
+
+    .hamburger {
+      position: absolute;
+      top: -5px;
+      left: -3px;
+      width: 30px;
+      height: 25px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      z-index: 100;
+      padding: 10px;
+    }
+
+    .bar {
+      height: 5px;
+      background-color: #fff;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .menu-options {
+      position: absolute;
+      top: 30;
+      left: 0;
+      background-color: var(--menu-bg);
+      width: 250px;
+      height: 100vh;
+      padding: 20px;
+      display: none;
+      flex-direction: column;
+      justify-content: flex-start;
+      box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .menu-options.active {
+      display: flex;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    .menu-options.active .hamburger {
+      top: 15px;
+      left: 25px;
+      padding: 15px;
+    }
+
+    .menu-options p {
+      margin: 10px 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      background-color: var(--button-color);
+      border-radius: 8px;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, font-size 0.3s ease, color 0.3s ease;
+      border: 1px solid white; /* White outline for the buttons */
+      font-size: var(--button-size); /* Button size is now dynamic */
+    }
+
+    .menu-options p:hover {
+      background-color: var(--button-hover-color);
+      color: black; /* Change text color to black on hover */
+      box-shadow: 0 0 10px var(--button-hover-color);
+    }
+
+    .hamburger.active .bar:nth-child(1) {
+      transform: translateY(10px) rotate(45deg);
+    }
+
+    .hamburger.active .bar:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active .bar:nth-child(3) {
+      transform: translateY(-10px) rotate(-45deg);
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(-100%);
+      }
+      to {
+        transform: translateX(0);
+      }
+    }
+
+    /* Customize Section */
+    .customize-section {
+      display: none;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-top: 10px;
+      padding: 15px;
+      background-color: var(--button-color);
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      animation: dropdown 0.5s ease-in-out;
+    }
+
+    @keyframes dropdown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Color Picker */
+    .color-picker {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      background-color: #444;
+      transition: background-color 0.3s ease;
+    }
+
+    /* Toggle Dark/Light Mode */
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      padding: 10px;
+      color: white;
+    }
+
+    .toggle-label input {
+      margin-right: 10px;
+    }
+
+    /* Resize Button Section */
+    .resize-options {
+      margin-top: 10px;
+    }
+
+    .resize-slider {
+      width: 100%;
+      margin-top: 10px;
+      padding: 5px;
+      border-radius: 8px;
+      background-color: #444;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="menu-container">
+    <div class="hamburger" onclick="toggleMenu()">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+    <div class="menu-options">
+      <div class="music-options">
+        <p>Favorites</p>
+        <p>Wishlist</p>
+        <p>Library</p>
+      </div>
+      <div class="customize-options" onclick="toggleCustomize()">
+        <p>Customize</p>
+      </div>
+      <div class="customize-section" id="customizeSection">
+        <label for="colorPicker">Choose Button Color:</label>
+        <input type="color" id="colorPicker" class="color-picker" onchange="changeButtonColor(event)">
+
+        <div class="toggle-label">
+          <input type="checkbox" id="darkLightToggle" onclick="toggleDarkLight()">
+          <label for="darkLightToggle">Toggle Dark/Light Mode</label>
+        </div>
+
+        <div class="resize-options">
+          <label for="resizeSlider">Resize Menu Button:</label>
+          <input type="range" id="resizeSlider" class="resize-slider" min="10" max="30" value="12" onchange="resizeButton(event)">
+        </div>
+      </div>
+      <div class="settings-options">
+        <p>Settings</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      const hamburger = document.querySelector('.hamburger');
+      const menu = document.querySelector('.menu-options');
+      hamburger.classList.toggle('active');
+      menu.classList.toggle('active');
+    }
+
+    function toggleCustomize() {
+      const customizeSection = document.getElementById('customizeSection');
+      customizeSection.style.display = customizeSection.style.display === 'none' || customizeSection.style.display === '' ? 'flex' : 'none';
+    }
+
+    function changeButtonColor(event) {
+      const color = event.target.value;
+      document.documentElement.style.setProperty('--button-hover-color', color);
+      document.querySelector('.color-picker').style.boxShadow = `0 0 10px ${color}`;
+    }
+
+    function toggleDarkLight() {
+      const body = document.body;
+      const isLightMode = body.classList.toggle("light-mode");
+
+      if (isLightMode) {
+        document.documentElement.style.setProperty('--button-color', '#ddd');
+        document.documentElement.style.setProperty('--menu-bg', '#f4f4f4');
+        document.documentElement.style.setProperty('--menu-text', 'black');
+      } else {
+        document.documentElement.style.setProperty('--button-color', '#333');
+        document.documentElement.style.setProperty('--menu-bg', '#181818');
+        document.documentElement.style.setProperty('--menu-text', 'white');
+      }
+    }
+
+    function resizeButton(event) {
+      const size = event.target.value;
+      document.documentElement.style.setProperty('--button-size', size + 'px');
+    }
+  </script>
+</body>
+</html>

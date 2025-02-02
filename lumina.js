@@ -1,4 +1,20 @@
 let isFirstClick = true;
+let currentMode = 'music'; // Default to Lumina Music
+
+function toggleMode() {
+    currentMode = currentMode === 'music' ? 'chat' : 'music';
+
+    // Update UI based on mode
+    const chatboxHeader = document.getElementById('chatboxHeader');
+    chatboxHeader.textContent = currentMode === 'music' ? 'Lumina Music' : 'Lumina Chat';
+
+    // Change behavior accordingly
+    if (currentMode === 'chat') {
+        generateChatResponse("Switched to Lumina Chat. Ask me anything!");
+    } else {
+        generateChatResponse("Switched to Lumina Music. Search for your favorite tracks!");
+    }
+}
 
 function toggleChatbox() {
     const chatbox = document.getElementById('chatbox');

@@ -7,6 +7,40 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <div class="menu-container">
+    <div class="hamburger" onclick="toggleMenu()">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+    <div class="menu-options">
+      <div class="music-options">
+        <p>Favorites</p>
+        <p>Wishlist</p>
+        <p>Library</p>
+      </div>
+      <div class="customize-options" onclick="toggleCustomize()">
+        <p>Customize</p>
+      </div>
+      <div class="customize-section" id="customizeSection">
+        <label for="colorPicker">Choose Button Color:</label>
+        <input type="color" id="colorPicker" class="color-picker" onchange="changeButtonColor(event)">
+
+        <div class="toggle-label">
+          <input type="checkbox" id="darkLightToggle" onclick="toggleDarkLight()">
+          <label for="darkLightToggle">Toggle Dark/Light Mode</label>
+        </div>
+
+        <div class="resize-options">
+          <label for="resizeSlider">Resize Menu Button:</label>
+          <input type="range" id="resizeSlider" class="resize-slider" min="10" max="30" value="12" onchange="resizeButton(event)">
+        </div>
+      </div>
+      <div class="settings-options">
+        <p>Settings</p>
+      </div>
+    </div>
+  </div>
     <!-- Search Bar -->
     <div class="search-container">
       <input
