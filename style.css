@@ -19,7 +19,7 @@ body {
 
 /* Search Bar */
 .search-container {
-  margin: 20px 0;
+  margin: -35px 0;
 }
 
 .search-bar {
@@ -297,7 +297,7 @@ body {
   transform: translate(-50%, -50%);
   background-color: rgba(0, 0, 0, 0.9);
   color: white;
-  padding: 20px;
+  padding: 30px;
   border-radius: 10px;
   display: flex;
   align-items: center;

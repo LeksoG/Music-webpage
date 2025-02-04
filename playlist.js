@@ -435,3 +435,30 @@ const playlist = [
         songStype:'Rock',
     },
 ];
+
+document.getElementById("playlistTab").addEventListener("click", function(event) {
+            event.preventDefault();
+            loadPlaylist();
+        });
+
+        function loadPlaylist() {
+            const contentDiv = document.getElementById("content");
+            contentDiv.innerHTML = "<h2>Your Playlist</h2><div class='song-list' id='songList'></div>";
+
+            const songListDiv = document.getElementById("songList");
+
+            playlist.forEach(song => {
+                const songItem = document.createElement("div");
+                songItem.classList.add("song-item");
+
+                songItem.innerHTML = `
+                    <img src="${song.albumArt}" alt="${song.trackName}">
+                    <div class="song-info">
+                        <div class="song-name">${song.trackName}</div>
+                        <div class="song-artist">${song.artist}</div>
+                    </div>
+                `;
+
+                songListDiv.appendChild(songItem);
+            });
+        }
