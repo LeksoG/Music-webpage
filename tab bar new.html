@@ -100,7 +100,7 @@
       padding: 0 0.5rem;
       opacity: 0;
       visibility: hidden;
-      transition: all 0.3s ease;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       background: rgba(17, 24, 39, 0.95);
       border-radius: 25px;
       pointer-events: none;
@@ -122,6 +122,7 @@
       background: rgba(30, 41, 59, 0.4);
       transition: all 0.3s ease;
       position: relative;
+      overflow: hidden;
     }
 
     .search-content::before {
@@ -143,31 +144,43 @@
       transition: opacity 0.3s ease;
     }
 
+    .search-content::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent 0%,
+        rgba(239, 68, 68, 0.2) 25%,
+        rgba(249, 115, 22, 0.2) 50%,
+        rgba(239, 68, 68, 0.2) 75%,
+        transparent 100%
+      );
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
     .search-content.active::before {
       opacity: 1;
     }
 
     .search-content.searching::before {
       opacity: 1;
-      animation: pulsatingGlow 1.5s ease-in-out infinite;
     }
 
-    @keyframes pulsatingGlow {
-      0%, 100% {
-        background: linear-gradient(90deg, #ef4444, #f97316, #ef4444);
-        box-shadow: 
-          0 0 5px #ef4444,
-          0 0 10px #f97316,
-          0 0 15px #ef4444;
-        transform: scale(1);
+    .search-content.searching::after {
+      opacity: 1;
+      animation: waveEffect 2s linear infinite;
+    }
+
+    @keyframes waveEffect {
+      0% {
+        transform: translateX(0) skewX(-15deg);
       }
-      50% {
-        background: linear-gradient(270deg, #f97316, #ef4444, #f97316);
-        box-shadow: 
-          0 0 10px #ef4444,
-          0 0 20px #f97316,
-          0 0 30px #ef4444;
-        transform: scale(1.02);
+      100% {
+        transform: translateX(50%) skewX(-15deg);
       }
     }
 
@@ -229,6 +242,7 @@
   </style>
 </head>
 <body>
+  <!-- Rest of the HTML remains exactly the same -->
   <div class="nav-container">
     <nav class="nav-bar">
       <div class="menu-container">
@@ -286,6 +300,7 @@
   </div>
 
   <script>
+    // JavaScript remains exactly the same
     const menuContainer = document.querySelector('.menu-container');
     const searchTrigger = document.querySelector('.search-trigger');
     const searchWrapper = document.querySelector('.search-wrapper');
@@ -296,7 +311,6 @@
 
     let searchTimeout;
 
-    // Handle menu item clicks
     menuItems.forEach(item => {
       item.addEventListener('click', () => {
         menuItems.forEach(i => i.classList.remove('active'));
@@ -304,16 +318,13 @@
       });
     });
 
-    // Toggle search functionality
     searchTrigger.addEventListener('click', () => {
-      // If search is already active, close it
       if (searchWrapper.classList.contains('active')) {
         closeSearch();
         searchTrigger.classList.remove('active');
         return;
       }
 
-      // Open search
       menuContainer.classList.add('hidden');
       searchWrapper.classList.add('active');
       searchContent.classList.add('active');
@@ -324,15 +335,10 @@
       }, 300);
     });
 
-    // Search input events
     searchInput.addEventListener('input', (e) => {
       if (searchInput.value.length > 0) {
         searchContent.classList.add('has-text');
-        
-        // Clear previous timeout
         clearTimeout(searchTimeout);
-        
-        // Start searching animation after 500ms of typing
         searchTimeout = setTimeout(() => {
           searchContent.classList.add('searching');
         }, 500);
@@ -343,7 +349,6 @@
       }
     });
 
-    // Close search function
     const closeSearch = () => {
       searchWrapper.classList.remove('active');
       searchContent.classList.remove('active');
@@ -354,22 +359,18 @@
       clearTimeout(searchTimeout);
     };
 
-    // Close search button behavior
     searchCloseBtn.addEventListener('click', (e) => {
       if (searchInput.value.length > 0) {
-        // If there's text, clear the text
         searchInput.value = '';
         searchContent.classList.remove('has-text');
         searchContent.classList.remove('searching');
         searchInput.focus();
       } else {
-        // If no text, close the search
         closeSearch();
         searchTrigger.classList.remove('active');
       }
     });
 
-    // Close search when clicking outside
     document.addEventListener('click', (e) => {
       const isClickInside = searchWrapper.contains(e.target) || 
                            searchTrigger.contains(e.target);
@@ -380,16 +381,13 @@
       }
     });
 
-    // Prevent closing when clicking inside search wrapper
     searchWrapper.addEventListener('click', (e) => {
       e.stopPropagation();
     });
 
-    // Return key handler
     searchInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter' && searchInput.value.length > 0) {
         searchContent.classList.add('searching');
-        // Simulate search - remove this in production and replace with actual search
         setTimeout(() => {
           searchContent.classList.remove('searching');
         }, 2000);

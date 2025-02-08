@@ -17,7 +17,23 @@ const copyButton = document.getElementById("copyButton");
 const copySuccess = document.getElementById("copySuccess");
 const searchBar = document.getElementById("searchBar");
 const searchContainer = document.querySelector(".search-container");
+const menuContainer = document.querySelector('.menu-container');
+const searchTrigger = document.querySelector('.search-trigger');
+const searchWrapper = document.querySelector('.search-wrapper');
+const searchContent = document.querySelector('.search-content');
+const searchCloseBtn = document.querySelector('.search-close');
+const searchInput = document.querySelector('.search-input');
+const menuItems = document.querySelectorAll('.menu-item:not(.search-trigger)');
+    
+let searchTimeout;
 
+    menuItems.forEach(item => {
+      item.addEventListener('click', () => {
+        menuItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+    
 // Create a dropdown for suggestions
 const suggestionDropdown = document.createElement("div");
 suggestionDropdown.style.position = "absolute";
